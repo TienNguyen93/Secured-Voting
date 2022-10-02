@@ -9,4 +9,4 @@ Secured Voting is a web-based software that aims at providing a secured platform
 
 ## Wireframes
 * Wireframes for Admin Dashboard and Voter UI:
-
+<img src="UI.png" width=80% height=80%>
