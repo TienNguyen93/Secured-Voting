@@ -48,7 +48,7 @@ class Blockchain:
     def create_a_block(self, voter_pub_key, candidate):
         block_index = len(self.chain)
         timestamp = datetime()
-        prev_hash = self.get_last_block()['hash']
+        prev_hash = self.get_last_block().hash
         block = Block(block_index, timestamp, voter_pub_key, candidate, prev_hash)
         block.hash = block.compute_hash()
         return block
