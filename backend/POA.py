@@ -23,7 +23,7 @@ def generate_keys():
 
 
 
-def Encrypt_Signature(block_dict,public_key):
+def encrypt_signature(block_dict,public_key):
     #convert block_dict to json foramt
     block_dict_to_string=json.dumps(block_dict,sort_keys=True)
 
@@ -43,7 +43,7 @@ def Encrypt_Signature(block_dict,public_key):
 
 
 # proof of authority, verify if data has been tampered with
-def POA(private_key,signature):
+def poa(private_key,signature):
     #decryption 
     encrypted_info=signature[1]
     info=signature[0]
@@ -55,3 +55,17 @@ def POA(private_key,signature):
     #check if info has been tampered
     check=recompute_hash.encode()==hash
     return check
+
+#check block's validity
+def is_valid_chain(chain):
+    #first block's previous hash
+    pre_hash="0"
+    for block in chain:
+        #record current block hash as next block's previous hash
+        current_hash=block.hash
+
+        #check if previous_hash is modified
+        if pre_hash!=block.previous_hash:
+            return False
+        pre_hash=current_hash
+    return True
