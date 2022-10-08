@@ -1,4 +1,4 @@
-from hashlib import sha256
+from blake3 import blake3
 import json
 import datetime
 
@@ -19,7 +19,9 @@ class Block:
     
     # Returns the calculated hash for the given Block
     def compute_hash(self):
-        pass
+        block_string = (json.dumps(self.__dict__, sort_keys=True)).encode()
+        hash_hex = blake3(block_string).hexdigest()
+        return hash_hex
 
 
 class Genesis_Block:
@@ -34,7 +36,9 @@ class Genesis_Block:
     
     # Returns the calculated hash for the given Block
     def compute_hash(self):
-        pass
+        block_string = (json.dumps(self.__dict__, sort_keys=True)).encode()
+        hash_hex = blake3(block_string).hexdigest()
+        return hash_hex
 
 
 class Blockchain:
