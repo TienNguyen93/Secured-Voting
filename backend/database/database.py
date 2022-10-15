@@ -42,3 +42,6 @@ class RegVoter(db.Model):
 
     def __repr__(self) -> str:
         return f'<RegVoter {self.username}>'
+
+
+    
