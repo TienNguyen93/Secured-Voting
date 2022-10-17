@@ -1,6 +1,8 @@
 from blake3 import blake3
 import json
-import datetime
+from datetime import datetime
+
+# from POA import generate_keys
 
 class Block:
 
@@ -30,13 +32,13 @@ class Genesis_Block:
     # @param election_info: the current election information for which Blockchain will be created
     def __init__(self, election_info):
         self.index = 0
-        self.timestamp = datetime()
+        self.timestamp = datetime.now()
         self.election = election_info
         self.prev_hash = "0"
     
     # Returns the calculated hash for the given Block
     def compute_hash(self):
-        block_string = (json.dumps(self.__dict__, sort_keys=True)).encode()
+        block_string = (json.dumps(self.__dict__, sort_keys=True, default=str)).encode()
         hash_hex = blake3(block_string).hexdigest()
         return hash_hex
 
@@ -51,7 +53,7 @@ class Blockchain:
 
     def create_a_block(self, voter_pub_key, candidate):
         block_index = len(self.chain)
-        timestamp = datetime()
+        timestamp = datetime.now()
         prev_hash = self.get_last_block().hash
         block = Block(block_index, timestamp, voter_pub_key, candidate, prev_hash)
         block.hash = block.compute_hash()
@@ -61,7 +63,20 @@ class Blockchain:
         return self.chain[-1]
 
     def add_block_to_the_chain(self, block):
+        """
+        if not self.is_valid_chain(block):
+            return False
+        """
+
         self.chain.append(block)
+
+    """
+    def is_valid_chain(self, chain)
+    """
+
+    """
+    def poa(private_key,signature) 
+    """
         
 
 
