@@ -1,7 +1,7 @@
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import rsa,padding
 from cryptography.hazmat.primitives import serialization
-#from cryptography.hazmat.primitives.serialization import load_pem_private_key,load_pem_public_key
+from cryptography.hazmat.primitives.serialization import load_pem_private_key,load_pem_public_key
 import json
 from hashlib import sha256
 
@@ -24,6 +24,7 @@ def generate_keys():
 
 
 def encrypt_signature(block_dict,public_key):
+    public_key=load_pem_public_key(public_key,backend=None)
     #convert block_dict to json foramt
     block_dict_to_string=json.dumps(block_dict,sort_keys=True)
 
@@ -44,6 +45,7 @@ def encrypt_signature(block_dict,public_key):
 
 # proof of authority, verify if data has been tampered with
 def poa(private_key,signature):
+    private_key=load_pem_private_key(private_key,password=None)
     #decryption 
     encrypted_info=signature[1]
     info=signature[0]
