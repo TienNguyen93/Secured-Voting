@@ -1,3 +1,4 @@
+from typing import KeysView
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import rsa,padding
 from cryptography.hazmat.primitives import serialization
@@ -8,10 +9,8 @@ from hashlib import sha256
 #generate private key and public key
 def generate_keys():
    
-   
     private_key = rsa.generate_private_key(public_exponent=65537,key_size=2048,)
     public_key = private_key.public_key()
-
     
     #PEM format of key
     pem_private_key=private_key.private_bytes(encoding=serialization.Encoding.PEM,format=serialization.PrivateFormat.PKCS8,encryption_algorithm=serialization.NoEncryption())
@@ -22,11 +21,10 @@ def generate_keys():
     return pair_of_key
 
 
-
 def encrypt_signature(block_dict,public_key):
     public_key=load_pem_public_key(public_key,backend=None)
-    #convert block_dict to json foramt
-    block_dict_to_string=json.dumps(block_dict,sort_keys=True)
+    #convert block_dict to json format
+    block_dict_to_string = json.dumps(block_dict, sort_keys=True, default=str)
 
     # encrypt and signature
     digest=sha256(block_dict_to_string.encode()).hexdigest()
@@ -57,17 +55,3 @@ def poa(private_key,signature):
     #check if info has been tampered
     check=recompute_hash.encode()==hash
     return check
-
-#check block's validity
-def is_valid_chain(chain):
-    #first block's previous hash
-    pre_hash="0"
-    for block in chain:
-        #record current block hash as next block's previous hash
-        current_hash=block.hash
-
-        #check if previous_hash is modified
-        if pre_hash!=block.previous_hash:
-            return False
-        pre_hash=current_hash
-    return True
