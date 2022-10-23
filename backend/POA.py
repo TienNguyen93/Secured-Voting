@@ -8,10 +8,8 @@ import json
 #generate private key and public key
 def generate_keys():
    
-   
     private_key = rsa.generate_private_key(public_exponent=65537,key_size=2048,)
     public_key = private_key.public_key()
-
     
     #PEM format of key
     pem_private_key=private_key.private_bytes(encoding=serialization.Encoding.PEM,format=serialization.PrivateFormat.PKCS8,encryption_algorithm=serialization.NoEncryption())
@@ -23,10 +21,12 @@ def generate_keys():
 
 
 
+
 def encrypt_signature(block_dict,admin_public_key,voter_private_key):
 
     voter_private_key=load_pem_private_key(voter_private_key,password=None)
     admin_public_key=load_pem_public_key(admin_public_key,backend=None)
+
 
     #convert block_dict to json foramt
     info=json.dumps(block_dict,sort_keys=True).encode()
@@ -46,6 +46,7 @@ def encrypt_signature(block_dict,admin_public_key,voter_private_key):
 
 
 # proof of authority, verify if data has been tampered with
+
 def poa(admin_private_key,voter_public_key,encrypt_and_signature):
     #load keys
     admin_private_key=load_pem_private_key(admin_private_key,password=None)
@@ -77,3 +78,4 @@ def is_valid_chain(chain):
             return False
         pre_hash=current_hash
     return True
+
