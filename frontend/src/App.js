@@ -14,8 +14,8 @@ const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route exact path="/" element={<SignupContainer />} />
-        <Route exact path="/signin" element={<SigninContainer />} />
+        <Route exact path="/" element={<SigninContainer />} />
+        <Route exact path="/signup" element={<SignupContainer />} />
       </Routes>
     </div>
   )
