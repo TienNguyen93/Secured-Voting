@@ -7,7 +7,8 @@ import React from 'react';
 //Components
 import {
   SignupContainer,
-  SigninContainer
+  SigninContainer,
+  VotingContainer
 } from "./components/containers";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<SigninContainer />} />
         <Route exact path="/signup" element={<SignupContainer />} />
+        <Route exact path="/voting" element={<VotingContainer />} />
       </Routes>
     </div>
   )
