@@ -18,7 +18,7 @@ const SigninView = () => {
             </form>
             
             <p>New to Secured Voting?</p>
-            <Link to={'/'}>Sign up</Link>
+            <Link to={'/signup'}>Sign up</Link>
         </div>
     )
 }

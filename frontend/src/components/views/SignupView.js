@@ -44,7 +44,7 @@ const SignupView = () => {
             </form>
 
             <p>Already have an account? </p>
-            <Link to={'/signin'}>Sign in</Link>
+            <Link to={'/'}>Sign in</Link>
         </div>
     )
 }
