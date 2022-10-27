@@ -1,43 +1,132 @@
+from optparse import Values
 from blockchain import *
 from POA import *
-from textwrap import dedent
 from uuid import uuid4
-import requests
 from flask import Flask, jsonify, request
+import requests
+import base64
 
 
 # Instantiate our Node
 app = Flask(__name__)
 
-# Generate a globally unique address for this node
-node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
-blockchain = Blockchain("Presidential Election 2022")
+election_info = "Presidential Election 2022"
+blockchain = Blockchain(election_info)
 
-# private_key, public_key = generate_keys()
-# print("Private Key: ", private_key)
-# print("Public Key: ", public_key)
+# Admin's public and private keys
+admin_priv_key, admin_pub_key = generate_keys()
 
+@app.route('/init', methods=['POST'])
+def initialize_voters():
+    voters = blockchain.nodes
+    headers = {'Content-Type': "application/json"}
+    key = admin_pub_key
+    b64_key = base64.b64encode(key)
+    b64_key = b64_key.decode("utf-8")
+    for voter in voters:
+        requests.post(f'http://{voter}/init_voter', data=json.dumps(b64_key), headers=headers)
+    response = {'message': f'Voter got the key'}
+    return jsonify(response), 201
+
+@app.route('/init_voter', methods=['POST'])
+def initialize_key():
+    key_64 = request.get_json()
+    key_encoded = key_64.encode("utf-8")
+    key = base64.b64decode(key_encoded)
+    admin_pub_key = key
+    response = {'message': f'Updated the key'}
+    return jsonify(response), 201
+
+# Voter votes
 @app.route('/vote/new', methods=['POST'])
-def create_the_vote():
-    values = request.get_json()
+def vote():
+    vote = request.get_json()
     # Check that the required fields are in the POST'ed data
-    # Private Key is required for TESTING
-    required = ['voter', 'candidate', 'private_key']
-    if not all(k in values for k in required):
+    required = ['voter', 'candidate']
+    if not all(k in vote for k in required):
         return 'Missing values', 400
 
-    # Create a new Vote and verify it
-    signed_vote = blockchain.create_the_vote(values['voter'], values['candidate'])
-    verified = poa(values['private_key'], signed_vote)
-    if verified:
-        blockchain.add_block_to_the_chain(json.loads(signed_vote[0]))
-        response = {'message': f'Vote will be added to Blockchain at index {blockchain.get_last_block().index}'}
+    # Generate keys for the voter
+    v_priv_key, v_pub_key = generate_keys()
+    
+    # Sign the vote and send it to be verified
+    signed_vote = encrypt_signature(vote, admin_pub_key, v_priv_key)
+    b64_v_pub_key = base64.b64encode(v_pub_key)
+    b64_v_pub_key = b64_v_pub_key.decode("utf-8")
+    vote["public_key"] = b64_v_pub_key
+    vote["signed_vote"] = signed_vote
+    headers = {'Content-Type': "application/json"}
+    requests.post(f'http://127.0.0.1:5000/vote/receive', data=json.dumps(vote), headers=headers)
+    response = {'message': f'Vote was successfully sent'}
+    return jsonify(response), 201
+
+
+# Admin receives the signed Vote
+@app.route('/vote/receive', methods=['POST'])
+def receive_the_vote():
+    vote = request.get_json()
+    b64_v_pub_key = vote["public_key"]
+    v_pub_key = b64_v_pub_key.encode("utf-8")
+    v_pub_key = base64.b64decode(v_pub_key)
+    vote["public_key"] = v_pub_key
+    b64_encrypt_info = vote["signed_vote"][0]
+    b64_signature = vote["signed_vote"][1]
+    encrypt_info = b64_encrypt_info.encode("utf-8")
+    encrypt_info = base64.b64decode(encrypt_info)
+    signature = b64_signature.encode("utf-8")
+    signature = base64.b64decode(signature)
+    signed_vote = (encrypt_info, signature)
+    vote["signed_vote"] = signed_vote
+    blockchain.to_be_verified_votes.append(vote)
+    response = {'message': f'Vote was successfully added to the list to be verified'}
+    return jsonify(response), 201
+
+
+# Lists all unverified votes that need to be verified
+@app.route('/vote/unverified', methods=['GET'])
+def list_unverified_votes():
+    unverified_votes_list = []
+    for vote in blockchain.to_be_verified_votes:
+        unverified_votes_list.append(vote)
+    return json.dumps({"length": len(unverified_votes_list),"unverified_votes": unverified_votes_list}, default=str)
+
+
+# Verifies voter's votes and adds them to verified votes list
+@app.route('/vote/verify', methods=['GET'])
+def verify_votes():
+    verified = 0
+    tampered = 0
+    print()
+    for vote in blockchain.to_be_verified_votes:
+        if (blockchain.verify_vote(admin_priv_key, vote["public_key"], vote["signed_vote"])):
+            verified += 1
+        else:
+            tampered += 1
+    # Empty out the list of to be verified votes
+    blockchain.to_be_verified_votes = []
+
+    if verified == 0 and tampered == 0:
+        response = {'message': f'There were no votes to be verified'}
         return jsonify(response), 201
     else:
-        response = {'message': f'The vote was tampered and will not be added to the Blockchain'}
+        response = {'message': f'{verified} votes were successfully verified and {tampered} votes were tampered'}
         return jsonify(response), 201
+
+
+# Verifies the Blockchain and then adds all verified votes to the chain
+@app.route('/add_vote', methods=['POST'])
+def add_votes_to_blockchain():
+    if blockchain.is_valid_chain():
+        for vote in blockchain.verified_votes:
+            block = blockchain.create_a_block(vote["voter"], vote["candidate"])
+            blockchain.add_block_to_the_chain(block)
+        # Empty out the list of verified votes
+        blockchain.verified_votes = []
+        return "Blocks were added to the chain", 201
+    return "The Blockchain was not valid therefore no votes were added to the chain", 400
+
 
 
 @app.route('/chain', methods=['GET'])
@@ -48,6 +137,7 @@ def full_chain():
     return json.dumps({"length": len(chain_data),"chain": chain_data}, default=str)
 
 
+# Endpoint to add new peers to the network
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     values = request.get_json()
@@ -66,6 +156,43 @@ def register_nodes():
     return jsonify(response), 201
 
 
+@app.route('/nodes/resolve', methods=['GET'])
+def poa_consensus():
+    updated = blockchain.resolve_conflicts()
+
+    if updated:
+        response = {
+            'message': 'Nodes in the network were updated'
+        }
+    else:
+        response = {
+            'message': 'There are no nodes in the network'
+        }
+
+    return jsonify(response), 200
+
+
+@app.route('/update_node', methods=['POST'])
+def update_peers():
+    # The host address to the peer node 
+    chain = request.get_json()
+    new_chain = []
+    for vote in chain:
+        if vote["index"] == 0:
+            block = Genesis_Block(vote["election"], vote["index"], vote["timestamp"], vote["prev_hash"])
+            block.hash = vote["hash"]
+            new_chain.append(block)
+        else:
+            block = Block(vote["index"], vote["timestamp"], vote["voter"], vote["candidate"], vote["prev_hash"])
+            block.hash = vote["hash"]
+            new_chain.append(block)
+    blockchain.chain = new_chain
+    response = {
+            'message': 'Successfully updated the nodes'
+        }
+    return jsonify(response), 200
+
+
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
@@ -76,60 +203,3 @@ if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=port)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# print(blockchain.chain[0].election)
-# print(blockchain.chain[0].index)
-# print(blockchain.chain[0].timestamp)
-# print(blockchain.chain[0].prev_hash)
-# print(blockchain.chain[0].hash)
-
-# pub_key0 = generate_keys()[1] # get a public key
-# # print(pub_key)
-# vote = blockchain.create_a_block(pub_key0, "Joe Biden")
-# blockchain.add_block_to_the_chain(vote)
-
-# print(blockchain.chain[1].index)
-# print(blockchain.chain[1].timestamp)
-# print(blockchain.chain[1].voter)
-# print(blockchain.chain[1].candidate)
-# print(blockchain.chain[0].hash)
-# print(blockchain.chain[1].prev_hash)
-# print(blockchain.chain[1].hash)
-
-# pub_key2 = generate_keys()[1] # get a public key
-# vote2 = blockchain.create_a_block(pub_key2, "Kathy Smith")
-# blockchain.add_block_to_the_chain(vote2)
-
-# print(blockchain.chain[2].index)
-# print(blockchain.chain[2].timestamp)
-# print(blockchain.chain[2].voter)
-# print(blockchain.chain[2].candidate)
-# print(blockchain.chain[1].hash)
-# print(blockchain.chain[2].prev_hash)
-# print(blockchain.chain[2].hash)
-
-# keys = generate_keys() # get a pair of keys
-# priv_key = keys[0]
-# pub_key = keys[1]
-# vote3 = blockchain.create_the_vote(pub_key, "Terry Dollores")
-# check = poa(priv_key, vote3)
-# print("Checked signature by POA", check)
-# # print("Validity", blockchain.is_valid_chain())
