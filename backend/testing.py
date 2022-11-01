@@ -13,6 +13,7 @@ from typing import List
 from pymongo.collection import Collection, ReturnDocument
 from fastapi.encoders import jsonable_encoder
 import json
+import os
 import flask
 
 from database.models import Address
@@ -20,12 +21,12 @@ from database.models import Address
 # Instantiate our Node
 app = Flask(__name__)
 
-env_var = dotenv_values(".env")
-app.config["MONGO_URI"] = env_var["ATLAS_URI"]
+load_dotenv()
+
+app.config["MONGO_URI"] = os.getenv("ATLAS_URI")
 
 mongo = PyMongo(app)
 collection: Collection = mongo.db.collection
-
 
 # create address
 @app.route('/address', methods=['POST'])
