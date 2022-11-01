@@ -6,9 +6,63 @@ from flask import Flask, jsonify, request
 import requests
 import base64
 
+from pymongo import MongoClient
+from dotenv import dotenv_values, load_dotenv
+from flask_pymongo import PyMongo
+from typing import List
+from pymongo.collection import Collection, ReturnDocument
+from fastapi.encoders import jsonable_encoder
+import json
+import flask
+
+from database.models import Address
 
 # Instantiate our Node
 app = Flask(__name__)
+
+env_var = dotenv_values(".env")
+app.config["MONGO_URI"] = env_var["ATLAS_URI"]
+
+mongo = PyMongo(app)
+collection: Collection = mongo.db.collection
+
+
+# create address
+@app.route('/address', methods=['POST'])
+def create_address():
+    new_address = request.get_json()
+
+    address = Address(**new_address)
+    insert_result = collection.insert_one(address.to_json())
+    created_address = collection.find_one(
+        {"_id": insert_result.inserted_id}
+    )
+    return created_address
+
+
+# get address
+@app.route("/address/<id>", methods=["GET"])
+def get_address(id):
+    address = collection.find_one_or_404({"_id": id})
+    return Address(**address).to_json()
+
+
+# get all addresses
+@app.route('/address', methods=['GET'])
+def get_addresses():
+    addresses = collection.find(limit=100)
+    return [Address(**address).to_json() for address in addresses]
+
+
+# delete address
+@app.route("/address/<id>", methods=["DELETE"])
+def delete_address(id):
+    deleted_address = collection.find_one_and_delete({"_id": id})
+    if deleted_address:
+        return Address(**deleted_address).to_json()
+    else:
+        flask.abort(404, "Address not found")
+
 
 
 # Instantiate the Blockchain
