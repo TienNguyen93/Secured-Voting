@@ -2,7 +2,7 @@ import './App.css';
 
 //Router
 import { Routes, Route } from "react-router-dom";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 //Components
 import {
