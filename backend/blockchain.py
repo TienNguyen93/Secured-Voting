@@ -2,7 +2,8 @@ from blake3 import blake3
 import json
 from datetime import datetime
 from urllib.parse import urlparse
-from POA import encrypt_signature
+import requests
+from POA import *
 
 
 class Block:
@@ -10,13 +11,13 @@ class Block:
     # Constructor that initializes the Block with passed parameters
     # @param block_index: index number of the block in the chain
     # @param timestamp: the date and time when the vote was casted
-    # @param voter_pub_key: voter's public key that he used to cast the vote with
+    # @param voter_id: voter's id 
     # @param candidate: the candidate for whom the voter voted for
     # @param prev_hash: the hash of the previous block in the chain
-    def __init__(self, block_index, timestamp, voter_pub_key, candidate, prev_hash):
+    def __init__(self, block_index, timestamp, voter_id, candidate, prev_hash):
         self.index = block_index
         self.timestamp = timestamp
-        self.voter = voter_pub_key
+        self.voter = voter_id
         self.candidate = candidate
         self.prev_hash = prev_hash
     
@@ -32,11 +33,11 @@ class Genesis_Block:
 
     # Constructor that initializes the Genesis Block with given election information
     # @param election_info: the current election information for which Blockchain will be created
-    def __init__(self, election_info):
-        self.index = 0
-        self.timestamp = datetime.now()
+    def __init__(self, election_info, index=0, timestamp=datetime.now(), prev_hash="0"):
+        self.index = index
+        self.timestamp = timestamp
         self.election = election_info
-        self.prev_hash = "0"
+        self.prev_hash = prev_hash
     
 
     # Returns the calculated hash for the given Block
@@ -52,36 +53,51 @@ class Blockchain:
     # Genesis Block gets initialized with passed election information
     # @param election_info: the current election information
     def __init__(self, election_info):
-        self.chain = []
         self.nodes = set()
-        self.votes = []
+        self.chain = []
+        self.verified_votes = []
+        self.to_be_verified_votes = []
         genesis_block = Genesis_Block(election_info)
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
 
 
-    # Creates a Block with voter's public key and the candidate's name
+    # Creates a Block with voter's id and the candidate's name
     # for whom the voter casted his vote for 
-    # @param voter_pub_key: public key used by the voter to cast his vote
+    # @param voter_id: voter's id
     # @param candidate: candidate's name for whom voter voted for
     # @return the hashed Block containing the vote
-    def create_a_block(self, voter_pub_key, candidate):
+    def create_a_block(self, voter_id, candidate):
         block_index = len(self.chain)
         timestamp = datetime.now()
         prev_hash = self.get_last_block().hash
-        block = Block(block_index, timestamp, voter_pub_key, candidate, prev_hash)
+        block = Block(block_index, timestamp, voter_id, candidate, prev_hash)
         block.hash = block.compute_hash()
         return block
 
 
-    # Creates digitally signed vote 
-    # @param voter_pub_key: public key used by the voter to cast his vote
-    # @param candidate: candidate's name for whom voter voted for
-    # @return digitally signed vote
-    def create_the_vote(self, voter_pub_key, candidate):
-        block = self.create_a_block(voter_pub_key, candidate)
-        signed_vote = encrypt_signature(block.__dict__, voter_pub_key)
-        return signed_vote
+    # Verify the voter's vote and adds it to the list of verified votes 
+    # @param admin_private_key: admin's private key
+    # @param voter_public_key: voter's public key
+    # @param encrypt_and_signature: encrypted and signed vote by voter
+    # @return True if the vote is verified and False if it was tampered
+    def verify_vote(self, admin_private_key, voter_public_key, encrypt_and_signature):
+        #load keys
+        admin_priv_key = load_pem_private_key(admin_private_key,password=None)
+        voter_pub_key = load_pem_public_key(voter_public_key,backend=None)
+        
+        encrypted_info = encrypt_and_signature[0]
+        signature = encrypt_and_signature[1]
+        #decrypt for info
+        info = admin_priv_key.decrypt(encrypted_info,padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),algorithm=hashes.SHA256(),label=None))
+        #verification
+        try:
+            voter_pub_key.verify(signature,info,padding.PSS(mgf=padding.MGF1(hashes.SHA256()),salt_length=padding.PSS.MAX_LENGTH),hashes.SHA256())
+            decoded_vote = json.loads(info)
+            self.verified_votes.append(decoded_vote)
+            return True
+        except:
+            return False
 
 
     # Gets the last Block in the Blockchain
@@ -108,12 +124,33 @@ class Blockchain:
             previous_hash = block.hash
         return True
 
+
+    # Consensus Algorithm (Proof Of Authority) that resolves conflicts by
+    # copying the main admin chain to the peer nodes in the network
+    # @return True if the nodes were updated, False if not
+    def resolve_conflicts(self):
+        if len(self.nodes) == 0:
+            return False
+
+        neighbours = self.nodes
+        # Get the main chain from admin: http://127.0.0.1:5000
+        response = requests.get("http://127.0.0.1:5000/chain")
+        chain = response.json()['chain']
+        headers = {'Content-Type': "application/json"}
+
+        # Update all the nodes in our network
+        for node in neighbours:
+            requests.post(f'http://{node}' + "/update_node", data=json.dumps(chain), headers=headers)
+        
+        return True
+        
+
     # Add a new node to the list of nodes
-    # @param address: Address of node. Eg. 'http://192.168.0.5:5000'
+    # @param address: address of the node. Ex. 'http://192.168.0.5:5000'
     def register_node(self, address):
         parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
-        
 
+    
 
 

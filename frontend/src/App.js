@@ -2,20 +2,24 @@ import './App.css';
 
 //Router
 import { Routes, Route } from "react-router-dom";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 //Components
 import {
   SignupContainer,
-  SigninContainer
+  SigninContainer,
+  VotingContainer,
+  VoteSuccessContainer
 } from "./components/containers";
 
 const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route exact path="/" element={<SignupContainer />} />
-        <Route exact path="/signin" element={<SigninContainer />} />
+        <Route exact path="/" element={<SigninContainer />} />
+        <Route exact path="/signup" element={<SignupContainer />} />
+        <Route exact path="/voting" element={<VotingContainer />} />
+        <Route exact path="/vote-success" element={<VoteSuccessContainer />} />
       </Routes>
     </div>
   )
