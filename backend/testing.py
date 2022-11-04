@@ -28,11 +28,19 @@ app.config["MONGO_URI"] = os.getenv("ATLAS_URI")
 mongo = PyMongo(app)
 collection: Collection = mongo.db.collection
 
+
+nodes = set()
+
 # create address
 @app.route('/address', methods=['POST'])
 def create_address():
     new_address = request.get_json()
 
+    """
+    check if there exists an address inside the database
+    if yes -> add that address into the neighbor set
+    else -> return
+    """
     address = Address(**new_address)
     insert_result = collection.insert_one(address.to_json())
     created_address = collection.find_one(
