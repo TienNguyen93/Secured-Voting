@@ -5,3 +5,19 @@
 .App-link {
   color: #61dafb;
 }
+
+.voter-list {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+table, th, td {
+  border: 1px solid;
+  padding: 8px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
