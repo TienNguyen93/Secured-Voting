@@ -53,7 +53,6 @@ class Blockchain:
     # Genesis Block gets initialized with passed election information
     # @param election_info: the current election information
     def __init__(self, election_info):
-        self.nodes = set()
         self.chain = []
         self.verified_votes = []
         self.to_be_verified_votes = []
@@ -79,21 +78,29 @@ class Blockchain:
     # Verify the voter's vote and adds it to the list of verified votes 
     # @param admin_private_key: admin's private key
     # @param voter_public_key: voter's public key
-    # @param encrypt_and_signature: encrypted and signed vote by voter
+    # @param encrypt_and_signature: voter's encrypted and signed vote
     # @return True if the vote is verified and False if it was tampered
     def verify_vote(self, admin_private_key, voter_public_key, encrypt_and_signature):
-        #load keys
-        admin_priv_key = load_pem_private_key(admin_private_key,password=None)
-        voter_pub_key = load_pem_public_key(voter_public_key,backend=None)
+
+        # convert values in tuple to byte
+        encrypt_and_signature = (base64.b64decode(encrypt_and_signature[0].encode()), base64.b64decode(encrypt_and_signature[1].encode()), base64.b64decode(encrypt_and_signature[2].encode()), base64.b64decode(encrypt_and_signature[3].encode())) 
+
+        # load keys
+        admin_private_key=load_pem_private_key(admin_private_key,password=None)
+        voter_public_key=load_pem_public_key(voter_public_key,backend=None)
         
-        encrypted_info = encrypt_and_signature[0]
+        encrypted_aes_key = encrypt_and_signature[0]
         signature = encrypt_and_signature[1]
-        #decrypt for info
-        info = admin_priv_key.decrypt(encrypted_info,padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),algorithm=hashes.SHA256(),label=None))
+        
+        #RSA decrypt 
+        aes_key = admin_private_key.decrypt(encrypted_aes_key, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(),label=None))
+        #AES decrypt
+        cipher_decrypt = AES.new(aes_key,AES.MODE_CFB,encrypt_and_signature[3])
+        decrypt_info = cipher_decrypt.decrypt(encrypt_and_signature[2])
         #verification
         try:
-            voter_pub_key.verify(signature,info,padding.PSS(mgf=padding.MGF1(hashes.SHA256()),salt_length=padding.PSS.MAX_LENGTH),hashes.SHA256())
-            decoded_vote = json.loads(info)
+            voter_public_key.verify(signature,decrypt_info,padding.PSS(mgf=padding.MGF1(hashes.SHA256()),salt_length=padding.PSS.MAX_LENGTH),hashes.SHA256())
+            decoded_vote = json.loads(decrypt_info)
             self.verified_votes.append(decoded_vote)
             return True
         except:
@@ -123,34 +130,3 @@ class Blockchain:
             # record current Block's hash as next Block's previous hash
             previous_hash = block.hash
         return True
-
-
-    # Consensus Algorithm (Proof Of Authority) that resolves conflicts by
-    # copying the main admin chain to the peer nodes in the network
-    # @return True if the nodes were updated, False if not
-    def resolve_conflicts(self):
-        if len(self.nodes) == 0:
-            return False
-
-        neighbours = self.nodes
-        # Get the main chain from admin: http://127.0.0.1:5000
-        response = requests.get("http://127.0.0.1:5000/chain")
-        chain = response.json()['chain']
-        headers = {'Content-Type': "application/json"}
-
-        # Update all the nodes in our network
-        for node in neighbours:
-            requests.post(f'http://{node}' + "/update_node", data=json.dumps(chain), headers=headers)
-        
-        return True
-        
-
-    # Add a new node to the list of nodes
-    # @param address: address of the node. Ex. 'http://192.168.0.5:5000'
-    def register_node(self, address):
-        parsed_url = urlparse(address)
-        self.nodes.add(parsed_url.netloc)
-
-    
-
-
