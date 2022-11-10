@@ -9,7 +9,8 @@ import {
   SignupContainer,
   SigninContainer,
   VotingContainer,
-  VoteSuccessContainer
+  VoteSuccessContainer,
+  AdminContainer
 } from "./components/containers";
 
 import ListVoters from './components/ListVoters';
@@ -23,6 +24,7 @@ const App = () => {
         <Route exact path="/voting" element={<VotingContainer />} />
         <Route exact path="/vote-success" element={<VoteSuccessContainer />} />
         <Route exact path="/voters" element={<ListVoters />}/>
+        <Route exact path="/admin" element={<AdminContainer />} />
       </Routes>
     </div>
   )
