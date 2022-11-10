@@ -5,9 +5,130 @@ import requests
 import base64
 import json
 
+import os
+import flask
+from flask_cors import CORS
+
+from database.models import Address, Voter, Admin
+
 
 # Instantiate our Node
 app = Flask(__name__)
+CORS(app)
+
+
+load_dotenv()
+
+app.config["MONGO_URI"] = os.getenv("ATLAS_URI")
+
+mongo = PyMongo(app)
+collection: Collection = mongo.db.collection
+voter_collection: Collection = mongo.db.voter
+admin_collection: Collection = mongo.db.admin
+
+nodes = set()
+
+# ------------------ ADMIN METHODS ----------------- #
+
+# create admin
+@app.route('/admin', methods=['POST'])
+def create_admin():
+    new_admin = request.get_json()
+
+    admin = Admin(**new_admin)
+    insert_result = admin_collection.insert_one(admin.to_json())
+    created_admin = admin_collection.find_one(
+        {"_id": insert_result.inserted_id}
+    )
+    return created_admin
+
+# get admin
+@app.route('/admin/<id>', methods=['GET'])
+def get_admin(id):
+    admin = admin_collection.find_one_or_404({"_id": id})
+    return Admin(**admin).to_json()
+# ------------------ END OF ADMIN METHODS ----------------- #
+
+# ------------------ VOTER METHODS ----------------- #
+
+# create voter
+@app.route('/voters', methods=['POST'])
+def create_voter():
+    new_voter = request.get_json()
+
+    voter = Voter(**new_voter)
+    insert_result = voter_collection.insert_one(voter.to_json())
+    created_voter = voter_collection.find_one({
+        "_id": insert_result.inserted_id
+    })
+    return created_voter
+
+
+# get single voter
+@app.route('/voters/<id>', methods=['GET'])
+def get_voter(id):
+    voter = voter_collection.find_one_or_404({"_id": id})
+    return Voter(**voter).to_json()
+
+
+# get all voters
+@app.route('/voters', methods=['GET'])
+def get_voters():
+    voters = voter_collection.find(limit=100)
+    return [Voter(**voter).to_json() for voter in voters]
+
+
+# update voter info
+# @app.route('/voters/<id>', methods=['PUT'])
+# def update_voter(id):
+
+# ------------------ END OF VOTER METHODS ----------------- #
+
+
+# ------------------ ADDRESS CRUD METHODS ----------------- #
+
+# create address
+@app.route('/address', methods=['POST'])
+def create_address():
+    new_address = request.get_json()
+
+    """
+    check if there exists an address inside the database
+    if yes -> add that address into the neighbor set
+    else -> return
+    """
+    address = Address(**new_address)
+    insert_result = collection.insert_one(address.to_json())
+    created_address = collection.find_one(
+        {"_id": insert_result.inserted_id}
+    )
+    return created_address
+
+
+# get single address
+@app.route("/address/<id>", methods=["GET"])
+def get_address(id):
+    address = collection.find_one_or_404({"_id": id})
+    return Address(**address).to_json()
+
+
+# get all addresses
+@app.route('/address', methods=['GET'])
+def get_addresses():
+    addresses = collection.find(limit=100)
+    return [Address(**address).to_json() for address in addresses]
+
+
+# delete address
+@app.route("/address/<id>", methods=["DELETE"])
+def delete_address(id):
+    deleted_address = collection.find_one_and_delete({"_id": id})
+    if deleted_address:
+        return Address(**deleted_address).to_json()
+    else:
+        flask.abort(404, "Address not found")
+# ------------------ END OF ADDRESS CRUD METHODS ----------------- #
+
 
 # Instantiate the Blockchain
 election_info = "Presidential Election 2022"
