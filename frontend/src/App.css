@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .App-link {
@@ -12,7 +15,9 @@
   display: flex;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid;
   padding: 8px;
 }
@@ -21,3 +26,89 @@ table {
   border-collapse: collapse;
 }
 
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+  width: 20rem;
+}
+
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: ghostwhite;
+  padding: 2rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 50px;
+  border-radius: 15px;
+  color: mediumblue
+}
+
+label {
+  text-align: left;
+}
+
+input {
+  padding-left: 5px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid black;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background-color: ghostwhite;
+}
+
+button {
+  font-size: medium;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  border-radius: 15px;
+  width: 20rem;
+  border: none;
+  background-color: royalblue;
+  cursor: pointer;
+  color: white;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.child-one {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 80px;
+}
+
+.child-two {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.error {
+  margin-top: 15px;
+  background-color: #Ffeded;
+  width: 20rem;
+  border: 1.5px solid red;
+  padding: 5px;
+}
+
+.error-title {
+  color: black;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.error-content {
+  color: black;
+  font-size: 15px;
+}
