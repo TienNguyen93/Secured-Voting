@@ -9,6 +9,15 @@ import os
 import flask
 from flask_cors import CORS
 
+from pymongo import MongoClient
+from dotenv import dotenv_values, load_dotenv
+from flask_pymongo import PyMongo
+from typing import List
+from pymongo.collection import Collection, ReturnDocument
+from fastapi.encoders import jsonable_encoder
+import flask
+from bson.json_util import dumps
+
 from database.models import Address, Voter, Admin
 
 
@@ -26,27 +35,14 @@ collection: Collection = mongo.db.collection
 voter_collection: Collection = mongo.db.voter
 admin_collection: Collection = mongo.db.admin
 
-nodes = set()
-
 # ------------------ ADMIN METHODS ----------------- #
 
-# create admin
-@app.route('/admin', methods=['POST'])
-def create_admin():
-    new_admin = request.get_json()
-
-    admin = Admin(**new_admin)
-    insert_result = admin_collection.insert_one(admin.to_json())
-    created_admin = admin_collection.find_one(
-        {"_id": insert_result.inserted_id}
-    )
-    return created_admin
-
 # get admin
-@app.route('/admin/<id>', methods=['GET'])
-def get_admin(id):
-    admin = admin_collection.find_one_or_404({"_id": id})
-    return Admin(**admin).to_json()
+@app.route('/admin', methods=['GET'])
+def get_admin():
+    admins = admin_collection.find(limit=10)
+    return [Admin(**admin).to_json() for admin in admins]
+
 # ------------------ END OF ADMIN METHODS ----------------- #
 
 # ------------------ VOTER METHODS ----------------- #
@@ -65,10 +61,10 @@ def create_voter():
 
 
 # get single voter
-@app.route('/voters/<id>', methods=['GET'])
-def get_voter(id):
-    voter = voter_collection.find_one_or_404({"_id": id})
-    return Voter(**voter).to_json()
+# @app.route('/voters/<id>', methods=['GET'])
+# def get_voter(id):
+#     voter = voter_collection.find_one_or_404({"_id": id})
+#     return Voter(**voter).to_json()
 
 
 # get all voters
@@ -78,9 +74,26 @@ def get_voters():
     return [Voter(**voter).to_json() for voter in voters]
 
 
-# update voter info
-# @app.route('/voters/<id>', methods=['PUT'])
-# def update_voter(id):
+
+# /login endpoint for log in frontend
+@app.route('/login', methods=['POST'])
+def login():
+    req = flask.request.get_json()
+    email = req.get("email", None)
+    password = req.get("password", None)
+
+    if voter_collection.find_one({"email": email}):
+        email_found = voter_collection.find_one({"email": email})
+        if password == email_found['password']:
+            return 'Voter email + pass correct'
+
+    if admin_collection.find_one({"email": email}):
+        email_found = admin_collection.find_one({"email": email})
+        if password == email_found['password']:
+            return 'Admin email + pass correct'
+
+    else:
+        return "None existence"
 
 # ------------------ END OF VOTER METHODS ----------------- #
 
