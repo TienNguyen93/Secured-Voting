@@ -85,15 +85,15 @@ def login():
     if voter_collection.find_one({"email": email}):
         email_found = voter_collection.find_one({"email": email})
         if password == email_found['password']:
-            return 'Voter email + pass correct'
+            return 'Voter'
 
     if admin_collection.find_one({"email": email}):
         email_found = admin_collection.find_one({"email": email})
         if password == email_found['password']:
-            return 'Admin email + pass correct'
+            return 'Admin'
 
     else:
-        return "None existence"
+        return "None"
 
 # ------------------ END OF VOTER METHODS ----------------- #
 
