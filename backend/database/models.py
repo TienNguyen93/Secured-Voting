@@ -18,18 +18,6 @@ class Address(BaseModel):
       data.pop("_id", None)
     return data
 
-
-# Address Model for Voter nested model
-class Addr(BaseModel):
-  street: str
-  city: str
-  state: str
-
-# Properties Model for Voter nested model
-class Properties(BaseModel):
-  email: str
-  password: str
-
 # Voter Model
 class Voter(BaseModel):
   id: str = Field(default_factory=uuid.uuid4, alias="_id")
@@ -37,9 +25,12 @@ class Voter(BaseModel):
   lastname: str = Field(...)
   dob: str = Field(...)
   ssn: int = Field(...)
-  address: Addr | None = None
+  street: str = Field(...)
+  city: str = Field(...)
+  state: str = Field(...)
   voted: bool = False
-  properties: Properties | None = None
+  email: str = Field(...)
+  password: str = Field(...)
   registered: bool = False
 
   def to_json(self):
@@ -51,7 +42,8 @@ class Admin(BaseModel):
   id: str = Field(default_factory=uuid.uuid4, alias="_id")
   firstname: str = Field(...)
   lastname: str = Field(...)
-  properties: Properties | None = None
+  email: str = Field(...)
+  password: str = Field(...)
 
   def to_json(self):
     return jsonable_encoder(self, exclude_none=True)
