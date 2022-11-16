@@ -16,7 +16,7 @@ const SignupView = (props) => {
                 <label>First Name: </label>
                 <input
                     type="text"
-                    name="firstName"
+                    name="firstname"
                     required
                     onChange={(e) => handleChange(e)}
                 />
@@ -25,7 +25,7 @@ const SignupView = (props) => {
                 <label>Last Name: </label>
                 <input
                     type="text"
-                    name="lastName"
+                    name="lastname"
                     required
                     onChange={(e) => handleChange(e)}
                 />
@@ -43,7 +43,7 @@ const SignupView = (props) => {
                 <label>Date of Birth: </label>
                 <input
                     type="date"
-                    name="dateOfBirth"
+                    name="dob"
                     required
                     onChange={(e) => handleChange(e)}
                 />
