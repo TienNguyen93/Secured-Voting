@@ -2,13 +2,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-// const useStyles = makeStyles( () => ({
-
-// }));
-
 const SignupView = (props) => {
     const { handleChange, handleSubmit } = props;
-    // const classes = useStyles();
+    
     return (
         <div>
             <h1>Sign Up</h1>
@@ -81,8 +77,15 @@ const SignupView = (props) => {
                     onChange={(e) => handleChange(e)}
                 />
                 <br />
-
-                <input type="submit" value="Submit" />
+                
+                <div>
+                <div className='button-container'>
+                    <button type="submit" onClick={handleSubmit}>
+                        Submit
+                    </button>
+                </div>
+                </div>
+                
             </form>
 
             <p>Already have an account? </p>
