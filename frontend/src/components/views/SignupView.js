@@ -10,83 +10,104 @@ const SignupView = (props) => {
     const { handleChange, handleSubmit } = props;
     // const classes = useStyles();
     return (
-        <div>
-            <h1>Sign Up</h1>
+        <div className="signup-wrapper">
+            <h1>Create Account</h1>
             <form onSubmit={(e) => handleSubmit(e)}>
-                <label>First Name: </label>
-                <input
-                    type="text"
-                    name="firstname"
-                    required
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">First Name</label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="text"
+                        name="firstname"
+                        required
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <label>Last Name: </label>
-                <input
-                    type="text"
-                    name="lastname"
-                    required
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">Last Name</label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="text"
+                        name="lastname"
+                        required
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <label>Email: </label>
-                <input
-                    type="email"
-                    name="email"
-                    required
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">Email</label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="email"
+                        name="email"
+                        required
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <label>Date of Birth: </label>
-                <input
-                    type="date"
-                    name="dob"
-                    required
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">Date of Birth</label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="date"
+                        name="dob"
+                        required
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <label>Social Security Number: </label>
-                <input
-                    type="text"
-                    name="ssn"
-                    required
-                    maxLength={10}
-                    onKeyPress={(event) => {
-                        if (!/[0-9]/.test(event.key)) {
-                            event.preventDefault();
-                        }
-                    }}
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">
+                    Social Security Number
+                </label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="text"
+                        name="ssn"
+                        required
+                        maxLength={10}
+                        onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                                event.preventDefault();
+                            }
+                        }}
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <label>Password: </label>
-                <input
-                    type="password"
-                    name="password"
-                    required
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">Password</label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="password"
+                        name="password"
+                        required
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <label>Confirm Password: </label>
-                <input
-                    type="password"
-                    name="confirmPassword"
-                    required
-                    onChange={(e) => handleChange(e)}
-                />
+                <label className="signup-form-label">Confirm Password</label>
                 <br />
+                <div className="signup-field">
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        required
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <input type="submit" value="Submit" />
+                <div className="button-container">
+                    {/* <input type="submit" value="Submit" /> */}
+                    <button type="submit">Sign Up</button>
+                </div>
             </form>
 
             <p>Already have an account? </p>
-            <Link to={"/"}>Sign in</Link>
+            <Link className="link" to={"/"}>
+                Sign in
+            </Link>
         </div>
     );
 };

@@ -56,7 +56,7 @@ const SignupContainer = () => {
                 }
             });
             
-            if (found == false) {
+            if (found === false) {
                 alert("SSN not found or already registered.");
             }
         }
