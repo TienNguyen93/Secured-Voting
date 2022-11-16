@@ -1,59 +1,93 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState } from 'react';
+import axios from 'axios'
 
 const SigninView = () => {
-    const [form, setForm] = useState({
-        email: "",
-        password: ""
-    })
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [response, setResponse] = useState("")
 
-    const onUpdateField = event => {
-        const nextFormState = {
-            ...form,
-            [event.target.name]: event.target.value,
-        }
-        console.log(event.target.value)
-        setForm(nextFormState)
-    }
 
     const onSubmitForm = event => {
         event.preventDefault()
-        alert(JSON.stringify(form, null, 2))
+        const configuration = {
+            method: 'post',
+            url: 'http://localhost:5000/login',
+            data: {
+                email,
+                password
+            }
+        }
+
+        axios(configuration)
+            .then((result) => {
+                setResponse(result.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const Redirect = ({ res }) => {
+        if (res === 'Voter') {
+            return (
+                <Navigate to="/voting"/>
+            )
+        }
+        if (res === 'Admin') {
+            return (
+                <Navigate to="/admin"/>
+            )
+        }
+        if (res === 'None') {
+            return (
+                <div className="error">
+                    <div className='error-title'>Wrong credentials</div>
+                    <div className='error-content'>Invalid email or password </div>
+                </div>
+            )
+        }
     }
 
     return (
-        <div>
+        <div className="login-wrapper">
             <h1>Sign In</h1>
             <form onSubmit={onSubmitForm}>
-                <div>
-                    <label>Email: </label>
+                <div className='input-container'>
                     <input
                         type="email"
                         name="email"
-                        value={form.email}
-                        onChange={onUpdateField}
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        placeholder="Email"
                     />
                 </div>
-                <div>
-                    <label>Password: </label>
+                <div className='input-container'>
                     <input
                         type="password"
                         name="password"
-                        value={form.password}
-                        onChange={onUpdateField}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        placeholder="Password"
                     />
                 </div>
-                <div>
-                    <button type="submit">
+                <div className='button-container'>
+                    <button type="submit" onClick={onSubmitForm}>
                         Login
                     </button>
                 </div>
             </form>
 
-            <div>
-                <p>New to Secured Voting?</p>
-                <Link to={'/signup'}>Sign up</Link>
+            <Redirect res={response} />
+
+            <div className='parent'>
+                <div className='child-one'>
+                    <p>New to Secured Voting?</p>
+                </div>
+                <div className='child-two'>
+                    <Link className="link" to={'/signup'}>Sign up</Link>
+                </div>
             </div>
 
         </div>
