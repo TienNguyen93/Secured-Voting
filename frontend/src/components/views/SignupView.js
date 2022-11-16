@@ -66,7 +66,7 @@ const SignupView = (props) => {
                         type="text"
                         name="ssn"
                         required
-                        maxLength={10}
+                        maxLength={9}
                         onKeyPress={(event) => {
                             if (!/[0-9]/.test(event.key)) {
                                 event.preventDefault();

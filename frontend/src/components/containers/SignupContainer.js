@@ -1,7 +1,9 @@
 import { SignupView } from "../views";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignupContainer = () => {
+    const navigate = useNavigate();
     const [voter, setVoter] = useState([]);
 
     useEffect(() => {
@@ -31,7 +33,8 @@ const SignupContainer = () => {
         if (registerVoter.password !== registerVoter.confirmPassword) {
             alert("Passwords do not match.");
         } else {
-            let found = false;
+            let voterFound = false;
+
             // update data from backend
             voter.map((voter) => {
                 if (
@@ -44,6 +47,7 @@ const SignupContainer = () => {
                             "content-Type": "application/json",
                         },
                         body: JSON.stringify({
+                            email: registerVoter.email,
                             password: registerVoter.password,
                             registered: true,
                         }),
@@ -52,11 +56,14 @@ const SignupContainer = () => {
                         .then((data) => {
                             console.log(data);
                         });
-                    found = true;
+
+                    voterFound = true;
+                    alert("You have successfully registered.");
+                    navigate("/");
                 }
             });
-            
-            if (found === false) {
+
+            if (voterFound === false) {
                 alert("SSN not found or already registered.");
             }
         }
