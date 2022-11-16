@@ -8,7 +8,6 @@ const SigninView = () => {
     const [password, setPassword] = useState("")
     const [response, setResponse] = useState("")
 
-
     const onSubmitForm = event => {
         event.preventDefault()
         const configuration = {

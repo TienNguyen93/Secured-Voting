@@ -1,7 +1,9 @@
 import { SignupView } from "../views";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignupContainer = () => {
+    const navigate = useNavigate();
     const [voters, setVoters] = useState([]);
 
     useEffect(() => {
@@ -50,6 +52,9 @@ const SignupContainer = () => {
                             .then((response) => response.json())
                             .then((data) => console.log('put method', data))
                             .catch(error => console.log(error))
+
+                        alert("You have successfully registered.");
+                        navigate("/");
                     }
                 }
             })
