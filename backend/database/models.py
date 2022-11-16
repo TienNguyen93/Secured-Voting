@@ -25,9 +25,6 @@ class Voter(BaseModel):
   lastname: str = Field(...)
   dob: str = Field(...)
   ssn: int = Field(...)
-  street: str = Field(...)
-  city: str = Field(...)
-  state: str = Field(...)
   voted: bool = False
   email: str = Field(...)
   password: str = Field(...)

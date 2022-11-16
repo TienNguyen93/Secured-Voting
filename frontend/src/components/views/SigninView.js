@@ -8,7 +8,6 @@ const SigninView = () => {
     const [password, setPassword] = useState("")
     const [response, setResponse] = useState("")
 
-
     const onSubmitForm = event => {
         event.preventDefault()
         const configuration = {
@@ -32,12 +31,12 @@ const SigninView = () => {
     const Redirect = ({ res }) => {
         if (res === 'Voter') {
             return (
-                <Navigate to="/voting"/>
+                <Navigate to="/voting" />
             )
         }
         if (res === 'Admin') {
             return (
-                <Navigate to="/admin"/>
+                <Navigate to="/admin" />
             )
         }
         if (res === 'None') {

@@ -2,13 +2,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-// const useStyles = makeStyles( () => ({
-
-// }));
-
 const SignupView = (props) => {
     const { handleChange, handleSubmit } = props;
-    // const classes = useStyles();
+    
     return (
         <div className="signup-wrapper">
             <h1>Create Account</h1>
@@ -99,7 +95,6 @@ const SignupView = (props) => {
                 </div>
 
                 <div className="button-container">
-                    {/* <input type="submit" value="Submit" /> */}
                     <button type="submit">Sign Up</button>
                 </div>
             </form>
