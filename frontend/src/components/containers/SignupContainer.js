@@ -1,85 +1,64 @@
 import { SignupView } from "../views";
-import React, { Component, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-class SignupContainer extends Component {
-    // Initialize state
-    constructor(props) {
-        super(props);
-        this.state = {
-            first_name: "",
-            last_name: "",
-            email: "",
-            date_of_birth: "",
-            ssn: "",
-            password: "",
-            confirm_password: "",
-        };
-    }
+const SignupContainer = () => {
+    const [voters, setVoters] = useState([]);
 
-    // Capture input data when it is entered
-    handleChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
-    };
-
-    handleSubmit = (e) => {
-        e.preventDefault(); // Prevent browser reload/refresh after submit.
-
-        // store data from backend
-        const [voter, setVoter] = useState([]);
-
-        // fetch data from backend
-        // not working yet
-        fetch("/Voters").then((response) =>
+    useEffect(() => {
+        fetch("http://localhost:5000/voters").then((response) =>
             response.json().then((data) => {
-                console.log(data); // testing data - remove after testing
-                setVoter(data);
+                setVoters(data);
             })
         );
+    }, []);
 
-        const {
-            first_name,
-            last_name,
-            email,
-            date_of_birth,
-            ssn,
-            password,
-            confirm_password,
-        } = this.state;
+    // Initialize state
+    const [registerVoter, setRegisterVoter] = useState({});
 
-        // update data from backend
-        voter.map((voter) => {
-            if (voter.ssn === ssn && voter.voted === false) {
-                fetch("/Voters", {
-                    method: "PUT",
-                    headers: {
-                        "content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        first_name,
-                        last_name,
-                        email,
-                        date_of_birth,
-                        ssn,
-                        password,
-                        registered: true,
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-                    });
-            }
-        });
+    // Capture input data when it is entered
+    const handleChange = (e) => {
+        let newVoter = {};
+        newVoter = { [e.target.name]: e.target.value };
+        setRegisterVoter((registerVoter) => ({
+            ...registerVoter,
+            ...newVoter,
+        }));
     };
 
-    render() {
-        return (
-            <SignupView
-                handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
-            />
-        );
-    }
-}
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent browser reload/refresh after submit.
+        if (registerVoter.password !== registerVoter.confirmPassword) {
+            alert("Passwords do not match.");
+        } else {
+            voters.map(voter => {
+                // if ssn match, retrieve voter's ID
+                if (Number(registerVoter.ssn) === voter.ssn) {
+                    const id = voter._id
+                    if (voter.registered === true) {
+                        console.log('User already registered')
+                    } else {
+                        const request = {
+                            method: "PUT",
+                            headers: { "content-Type": "application/json" },
+                            body: JSON.stringify({
+                                password: registerVoter.password,
+                                email: registerVoter.email,
+                                registered: true,
+                            }),
+                        }
+                        fetch(`http://localhost:5000/voters/${id}`, request)
+                            .then((response) => response.json())
+                            .then((data) => console.log('put method', data))
+                            .catch(error => console.log(error))
+                    }
+                }
+            })
+        }
+    };
+
+    return (
+        <SignupView handleChange={handleChange} handleSubmit={handleSubmit} />
+    );
+};
 
 export default SignupContainer;

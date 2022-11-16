@@ -35,7 +35,6 @@ collection: Collection = mongo.db.collection
 voter_collection: Collection = mongo.db.voter
 admin_collection: Collection = mongo.db.admin
 
-# ------------------ ADMIN METHODS ----------------- #
 
 # get admin
 @app.route('/admin', methods=['GET'])
@@ -43,7 +42,6 @@ def get_admin():
     admins = admin_collection.find(limit=10)
     return [Admin(**admin).to_json() for admin in admins]
 
-# ------------------ END OF ADMIN METHODS ----------------- #
 
 # ------------------ VOTER METHODS ----------------- #
 
@@ -58,13 +56,6 @@ def create_voter():
         "_id": insert_result.inserted_id
     })
     return created_voter
-
-
-# get single voter
-# @app.route('/voters/<id>', methods=['GET'])
-# def get_voter(id):
-#     voter = voter_collection.find_one_or_404({"_id": id})
-#     return Voter(**voter).to_json()
 
 
 # get all voters
@@ -95,6 +86,23 @@ def login():
     else:
         return "None"
 
+
+# for authenticate the registered voter
+@app.route('/voters/<id>', methods=['PUT'])
+def register(id):
+    req = flask.request.get_json()
+    password = req.get("password", None)
+    registered = req.get("registered", None)
+    email = req.get("email", None)
+
+    # update the fields 
+    voter = { "_id": id }
+    updated_pass = {"$set" : 
+        {'password' : password, 'registered': registered, 'email': email}
+    }
+    voter_collection.update_one(voter, updated_pass)
+    return {"update successfully" : 200}
+    
 # ------------------ END OF VOTER METHODS ----------------- #
 
 
