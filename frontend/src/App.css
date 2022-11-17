@@ -79,6 +79,26 @@ label {
   text-align: left;
 }
 
+.checkmark {
+  display: block;
+  width: 5rem;
+  margin: 20px auto 0 auto;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1.center {
+  font-size: 50px
+}
+
+p.center {
+  font-size: 30px;
+}
+
 input {
   padding-left: 5px;
   padding-top: 8px;
