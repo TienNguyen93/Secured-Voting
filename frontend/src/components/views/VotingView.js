@@ -15,19 +15,9 @@ const VotingView = () => {
                     <label htmlFor="president3">President 3</label><br />
                 </form>
             </div>
-            <div>
-                <h2>Vice President</h2>
-                <form>
-                    <input type="radio" id="vicePresident1" name="vicePresident" value="vicePresident1" />
-                    <label htmlFor="vicePresident1">Vice President 1</label><br />
-                    <input type="radio" id="vicePresident2" name="vicePresident" value="vicePresident2" />
-                    <label htmlFor="vicePresident2">Vice President 2</label><br />
-                    <input type="radio" id="vicePresident3" name="vicePresident" value="vicePresident3" />
-                    <label htmlFor="vicePresident3">Vice President 3</label><br />
-                </form>
-            </div>
+
             <br />
-            <input type="submit" value="Submit" />
+            <button>Submit</button>
         </div>
     )
 }
