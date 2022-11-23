@@ -1,13 +1,15 @@
 from POA import *
 from blockchain import *
 
-class Admin:
-    #Constructor that initializes the admin class with given election information
-    #@param election_info:election information blockchain makes
-    def __init__(self,election_info):
-        self.candidates=[]
-        self.candidates_vote={}
-        self.blockchain = Blockchain(election_info)
+class AdminPerson:
+    # Constructor that initializes the admin class 
+    # Admin's public and private keys are generated
+    def __init__(self):
+        keys = generate_keys()
+        self.priv_key = keys[0]
+        self.pub_key = keys[1]
+        self.candidates = []
+        self.candidates_vote = {}
 
     #set up candidates and store their names
     #@param candidate_name: names of candidates

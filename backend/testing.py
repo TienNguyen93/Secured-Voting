@@ -1,5 +1,6 @@
 from blockchain import *
 from POA import *
+from admin import *
 from flask import Flask, jsonify, request
 import requests
 import base64
@@ -18,7 +19,7 @@ from fastapi.encoders import jsonable_encoder
 import flask
 from bson.json_util import dumps
 
-from database.models import Address, Voter, Admin
+from database.models import Address, Voter, Admin, Candidate
 
 
 # Instantiate our Node
@@ -34,7 +35,7 @@ mongo = PyMongo(app)
 collection: Collection = mongo.db.collection
 voter_collection: Collection = mongo.db.voter
 admin_collection: Collection = mongo.db.admin
-
+candidate_collection: Collection = mongo.db.candidate
 
 # get admin
 @app.route('/admin', methods=['GET'])
@@ -42,6 +43,50 @@ def get_admin():
     admins = admin_collection.find(limit=10)
     return [Admin(**admin).to_json() for admin in admins]
 
+
+# add candidate
+@app.route('/candidates', methods=['POST'])
+def create_candidate():
+    new_candidate = request.get_json()
+
+    candidate = Candidate(**new_candidate)
+    insert_result = candidate_collection.insert_one(candidate.to_json())
+    created_candidate = candidate_collection.find_one({
+        "_id": insert_result.inserted_id
+    })
+    return created_candidate
+
+
+# get all candidates
+@app.route('/candidates', methods=['GET'])
+def get_candidates():
+    candidates = candidate_collection.find(limit=100)
+    return [Candidate(**candidate).to_json() for candidate in candidates]
+
+
+# update vote count
+@app.route('/candidates/<id>', methods=['PUT'])
+def update_vote(id):
+    req = flask.request.get_json()
+    voteCount = req.get("voteCount", None)
+
+    # update the fields 
+    candidate = { "_id": id }
+    updated_count = {"$set" : {'voteCount' : voteCount} }
+
+    candidate_collection.update_one(candidate, updated_count)
+    return {"update successfully" : 200}
+
+
+# delete candidate
+@app.route('/candidates/<id>', methods=['DELETE'])
+def delete_candidate(id):
+    deleted_candidate = candidate_collection.find_one_and_delete({"_id": id})
+    if deleted_candidate:
+        return {'status': 'Candidate ID' + id + ' is deleted!'}
+        # return Address(**deleted_address).to_json()
+    else:
+        flask.abort(404, "Address not found")
 
 # ------------------ VOTER METHODS ----------------- #
 
@@ -151,23 +196,30 @@ def delete_address(id):
 # ------------------ END OF ADDRESS CRUD METHODS ----------------- #
 
 
-# Instantiate the Blockchain
-election_info = "Presidential Election 2022"
-blockchain = Blockchain(election_info)
-
-# Admin's public and private keys
-admin_priv_key, admin_pub_key = generate_keys()
+# Blockchain
+blockchain = -1
+# Admin's public key
+admin_pub_key = -1
+admin = -1
 # Set of nodes in the network
 nodes = set()
 
 # ---------------- INITIALIZATION OF NODES ---------------------
 
+# Admin initializes itself, creates a blockchain and 
+# shares its' public key with other nodes (voters)
 # Each voter node registers their port in the network
 @app.route('/init', methods=['POST'])
 def initialize():
     global nodes
+    global admin
     global admin_pub_key
+    global blockchain
     headers = {'Content-Type': "application/json"}
+    if port == 5000:
+        admin = AdminPerson()
+        blockchain = Blockchain('Presidential Election 2022')
+        admin_pub_key = admin.pub_key
     # Get a copy of all registered neighbors from admin port 5000
     # And get admin public key for voting
     if port != 5000:
@@ -186,6 +238,7 @@ def initialize():
     return jsonify(response), 201
 
 
+# Helper endpoint
 @app.route('/init_nodes', methods=['POST'])
 def update_nodes():
     port = request.get_json()
@@ -194,11 +247,13 @@ def update_nodes():
     return jsonify(response), 201
 
 
+# Helper endpoint
 @app.route('/get_neighbors', methods=['GET'])
 def get_neighbors():
     return json.dumps({"neighbors": list(nodes)})
 
 
+# Helper endpoint
 @app.route('/get_pub_key', methods=['GET'])
 def get_admin_public_key():
     key = admin_pub_key
@@ -210,7 +265,7 @@ def get_admin_public_key():
 # -------------------------- VOTING ----------------------------
 
 # Voter votes
-@app.route('/vote/new', methods=['POST'])
+@app.route('/vote', methods=['POST'])
 def vote():
     vote = request.get_json()
     # Check that the required fields are in the POST'ed data
@@ -242,56 +297,21 @@ def receive_the_vote():
     v_pub_key = b64_v_pub_key.encode("utf-8")
     v_pub_key = base64.b64decode(v_pub_key)
     vote["public_key"] = v_pub_key
-    blockchain.to_be_verified_votes.append(vote)
-    response = {'message': f'Vote was successfully added to the list to be verified'}
+
+    if (blockchain.verify_vote(admin.priv_key, vote["public_key"], vote["signed_vote"])):
+        if blockchain.is_valid_chain():
+            block = blockchain.create_a_block(vote["voter"], vote["candidate"])
+            blockchain.add_block_to_the_chain(block)
+            requests.get("http://127.0.0.1:5000/resolve")
+            response = {'message': f'Vote was successfully verified and added to the blockchain.'}
+        else:
+            response = {'message': f'The blockchain was tampered. Cannot add votes.'}
+    else:
+        response = {'message': f'Vote was tampered. Hence, it was not added to the blockchain.'}
     return jsonify(response), 201
 
 
-# Lists all unverified votes that need to be verified
-@app.route('/vote/unverified', methods=['GET'])
-def list_unverified_votes():
-    unverified_votes_list = []
-    for vote in blockchain.to_be_verified_votes:
-        unverified_votes_list.append((vote['voter'], vote['candidate']))
-    return json.dumps({"length": len(unverified_votes_list),"unverified_votes": unverified_votes_list}, default=str)
-
-
-# ---------------------- VOTE VERIFICATION ------------------------
-
-# Admin verifies voters' votes
-@app.route('/vote/verify', methods=['GET'])
-def verify_votes():
-    verified = 0
-    tampered = 0
-    for vote in blockchain.to_be_verified_votes:
-        if (blockchain.verify_vote(admin_priv_key, vote["public_key"], vote["signed_vote"])):
-            verified += 1
-        else:
-            tampered += 1
-    # Empty out the list of to be verified votes
-    blockchain.to_be_verified_votes = []
-
-    if verified == 0 and tampered == 0:
-        response = {'message': f'There were no votes to be verified'}
-        return jsonify(response), 201
-    else:
-        response = {'message': f'{verified} votes were successfully verified and {tampered} votes were tampered'}
-        return jsonify(response), 201
-
-
-# Verifies the Blockchain and then adds all verified votes to the chain
-@app.route('/add_vote', methods=['POST'])
-def add_votes_to_blockchain():
-    if blockchain.is_valid_chain():
-        for vote in blockchain.verified_votes:
-            block = blockchain.create_a_block(vote["voter"], vote["candidate"])
-            blockchain.add_block_to_the_chain(block)
-        # Empty out the list of verified votes
-        blockchain.verified_votes = []
-        return "Blocks were added to the chain", 201
-    return "The Blockchain was not valid therefore no votes were added to the chain", 400
-
-
+# Returns the blockchain data
 @app.route('/chain', methods=['GET'])
 def full_chain():
     chain_data = []
@@ -303,7 +323,7 @@ def full_chain():
 # ---------------------- NODE RESOLUTION ------------------------
 
 # Resolve all blockchains in the network with Proof Of Authority Consensus Algorithm
-@app.route('/nodes/resolve', methods=['GET'])
+@app.route('/resolve', methods=['GET'])
 def poa_consensus():
     global nodes
     if len(nodes) == 0:
@@ -322,9 +342,12 @@ def poa_consensus():
     return jsonify(response), 200
 
 
+# Helper endpoint
 @app.route('/resolve_node', methods=['POST'])
 def resolve_nodes():
+    global blockchain
     chain = request.get_json()
+    blockchain = Blockchain("Voter's Blockchain")    
     new_chain = []
     for vote in chain:
         if vote["index"] == 0:

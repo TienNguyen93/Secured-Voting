@@ -54,8 +54,6 @@ class Blockchain:
     # @param election_info: the current election information
     def __init__(self, election_info):
         self.chain = []
-        self.verified_votes = []
-        self.to_be_verified_votes = []
         genesis_block = Genesis_Block(election_info)
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
@@ -100,8 +98,6 @@ class Blockchain:
         #verification
         try:
             voter_public_key.verify(signature,decrypt_info,padding.PSS(mgf=padding.MGF1(hashes.SHA256()),salt_length=padding.PSS.MAX_LENGTH),hashes.SHA256())
-            decoded_vote = json.loads(decrypt_info)
-            self.verified_votes.append(decoded_vote)
             return True
         except:
             return False
