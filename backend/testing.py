@@ -18,7 +18,7 @@ from fastapi.encoders import jsonable_encoder
 import flask
 from bson.json_util import dumps
 
-from database.models import Address, Voter, Admin
+from database.models import Address, Voter, Admin, Candidate
 
 
 # Instantiate our Node
@@ -34,13 +34,47 @@ mongo = PyMongo(app)
 collection: Collection = mongo.db.collection
 voter_collection: Collection = mongo.db.voter
 admin_collection: Collection = mongo.db.admin
-
+candidate_collection: Collection = mongo.db.candidate
 
 # get admin
 @app.route('/admin', methods=['GET'])
 def get_admin():
     admins = admin_collection.find(limit=10)
     return [Admin(**admin).to_json() for admin in admins]
+
+
+# add candidate
+@app.route('/candidates', methods=['POST'])
+def create_candidate():
+    new_candidate = request.get_json()
+
+    candidate = Candidate(**new_candidate)
+    insert_result = candidate_collection.insert_one(candidate.to_json())
+    created_candidate = candidate_collection.find_one({
+        "_id": insert_result.inserted_id
+    })
+    return created_candidate
+
+
+# get all candidates
+@app.route('/candidates', methods=['GET'])
+def get_candidates():
+    candidates = candidate_collection.find(limit=100)
+    return [Candidate(**candidate).to_json() for candidate in candidates]
+
+
+# update vote count
+@app.route('/candidates/<id>', methods=['PUT'])
+def update_vote(id):
+    req = flask.request.get_json()
+    voteCount = req.get("voteCount", None)
+
+    # update the fields 
+    candidate = { "_id": id }
+    updated_count = {"$set" : {'voteCount' : voteCount} }
+
+    candidate_collection.update_one(candidate, updated_count)
+    return {"update successfully" : 200}
 
 
 # ------------------ VOTER METHODS ----------------- #
