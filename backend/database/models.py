@@ -44,3 +44,13 @@ class Admin(BaseModel):
 
   def to_json(self):
     return jsonable_encoder(self, exclude_none=True)
+
+
+# Candidate Model
+class Candidate(BaseModel):
+  id: str = Field(default_factory=uuid.uuid4, alias="_id")
+  name: str = Field(...)
+  voteCount: int = 0
+
+  def to_json(self):
+    return jsonable_encoder(self, exclude_none=True)
