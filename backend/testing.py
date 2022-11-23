@@ -77,6 +77,16 @@ def update_vote(id):
     return {"update successfully" : 200}
 
 
+# delete candidate
+@app.route('/candidates/<id>', methods=['DELETE'])
+def delete_candidate(id):
+    deleted_candidate = candidate_collection.find_one_and_delete({"_id": id})
+    if deleted_candidate:
+        return {'status': 'Candidate ID' + id + ' is deleted!'}
+        # return Address(**deleted_address).to_json()
+    else:
+        flask.abort(404, "Address not found")
+
 # ------------------ VOTER METHODS ----------------- #
 
 # create voter
