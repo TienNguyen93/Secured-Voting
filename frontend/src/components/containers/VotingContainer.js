@@ -6,6 +6,7 @@ const VotingContainer = () => {
     const navigate = useNavigate();
     // Get candidates from database
     const [candidates, setCandidates] = useState([]);
+    const [votedCandidates, setVotedCandidates] = useState("");
 
     useEffect(() => {
         fetch("http://localhost:5000/candidates").then((response) =>
@@ -16,6 +17,27 @@ const VotingContainer = () => {
     }, []);
 
     const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const requestInit = {
+            method: "POST",
+            headers: { "content-Type": "application/json" },
+            body: JSON.stringify({ }),
+        }
+        fetch(`http://localhost:5000/init`, requestInit)
+            .then((response) => response.json())
+            .then((data) => console.log("post method init", data))
+            .catch((error) => console.log(error))
+
+        const requestVote = {
+            method: "POST",
+            headers: { "content-Type": "application/json" },
+            body: JSON.stringify({  }), // TODO: Add data to body
+        }
+        fetch(`http://localhost:5000/vote`, requestVote)
+            .then((response) => response.json())
+            .then((data) => console.log("post method vote", data))
+            .catch((error) => console.log(error))
 
         navigate("/vote-success");
     }
