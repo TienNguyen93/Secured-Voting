@@ -36,7 +36,7 @@ table {
 }
 
 
-.login-wrapper {
+.login-wrapper, .voting-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -157,4 +157,32 @@ button {
 .error-content {
   color: black;
   font-size: 15px;
+}
+
+.voting-page {
+  text-align: center;
+}
+
+.voting-page h1 {
+  font-size: 50px;
+}
+
+.voting-page label {
+  font-size: 25px;
+  color: black;
+  font-weight: 500;
+}
+
+.voting-page input {
+  transform: scale(1.5);
+  /* margin-right: 10px; */
+}
+
+.candidate {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px;
+  width: 20rem;
 }

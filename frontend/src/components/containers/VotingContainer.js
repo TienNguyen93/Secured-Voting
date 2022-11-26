@@ -6,7 +6,7 @@ const VotingContainer = () => {
     const navigate = useNavigate();
     // Get candidates from database
     const [candidates, setCandidates] = useState([]);
-    const [votedCandidates, setVotedCandidates] = useState("");
+    let votedCandidate = "";
 
     useEffect(() => {
         fetch("http://localhost:5000/candidates").then((response) =>
@@ -15,6 +15,10 @@ const VotingContainer = () => {
             })
         );
     }, []);
+
+    const handleChange = (e) => {
+        votedCandidate = e.target.value;
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -32,7 +36,9 @@ const VotingContainer = () => {
         const requestVote = {
             method: "POST",
             headers: { "content-Type": "application/json" },
-            body: JSON.stringify({  }), // TODO: Add data to body
+            body: JSON.stringify({ 
+                candidate: votedCandidate,
+             }), // TODO: Add voter id to body
         }
         fetch(`http://localhost:5000/vote`, requestVote)
             .then((response) => response.json())
@@ -43,7 +49,7 @@ const VotingContainer = () => {
     }
 
     return (
-        <VotingView handleSubmit={handleSubmit} candidates={candidates}/>
+        <VotingView handleSubmit={handleSubmit} handleChange={handleChange} candidates={candidates}/>
     );
 }
 
