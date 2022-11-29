@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const SignupView = (props) => {
     const { handleChange, handleSubmit } = props;
-    
+
     return (
         <div className="signup-wrapper">
             <h1>Create Account</h1>

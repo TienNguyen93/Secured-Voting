@@ -4,7 +4,7 @@ import "./Candidate.css";
 import CandidateFormPopup from "./CandidateFormPopup";
 
 const CandidateView = (props) => {
-    const { candidates } = props;
+    const { handleChange, handleSubmit, candidates } = props;
     const [popupButton, setPopupButton] = useState(false);
 
     return (
@@ -12,14 +12,27 @@ const CandidateView = (props) => {
             <Navbar />
             <div className="CandidateFormContainer">
                 <h1>Candidates</h1>
-                
+
                 <button onClick={() => setPopupButton(true)}>New</button>
-                <CandidateFormPopup trigger={popupButton} setTrigger={setPopupButton}>
-                    <form>
-                      <h1>Add Candidate</h1>
-                      <label>Name: </label>
-                      <input type="text" name="name" required />
-                      <button type="submit">Submit</button>
+                <CandidateFormPopup
+                    trigger={popupButton}
+                    setTrigger={setPopupButton}
+                >
+                    <form
+                        onSubmit={(e) => {
+                            handleSubmit(e);
+                            setPopupButton(false);
+                        }}
+                    >
+                        <h1>Add Candidate</h1>
+                        <label>Name: </label>
+                        <input
+                            type="text"
+                            name="name"
+                            required
+                            onChange={(e) => handleChange(e)}
+                        />
+                        <button type="submit">Submit</button>
                     </form>
                 </CandidateFormPopup>
 
