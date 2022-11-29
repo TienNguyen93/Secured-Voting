@@ -7,7 +7,6 @@ const VotingView = (props) => {
         <div className="voting-page">
             <h1 >Vote</h1>
             <div>
-                {/* <h2>President</h2> */}
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <div onChange={(e) => handleChange(e)}>
                         {candidates.map((candidate) => {

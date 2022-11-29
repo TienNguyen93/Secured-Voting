@@ -21,7 +21,7 @@ class ListVoters extends Component {
 
   render() {
     return (
-      <div>
+      <div className="votersList">
         <h1>List of voters</h1>
         <div className="voter-list">
           <table>
