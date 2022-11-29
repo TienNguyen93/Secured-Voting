@@ -15,9 +15,6 @@ import {
   VoterContainer
 } from "./components/containers";
 
-// import Candidate from "./components/views/adminComponents/CandidateView";
-// import Voters from "./components/views/adminComponents/VoterView";
-
 import ListVoters from './components/ListVoters';
 
 const App = () => {
