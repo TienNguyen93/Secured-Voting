@@ -1,25 +1,36 @@
-import React from 'react';
+import React from "react";
 
-const VotingView = () => {
+const VotingView = (props) => {
+    const { handleSubmit, handleChange, candidates } = props;
+
     return (
-        <div>
-            <h1>Vote</h1>
+        <div className="voting-page">
+            <h1 >Vote</h1>
             <div>
-                <h2>President</h2>
-                <form>
-                    <input type="radio" id="president1" name="president" value="president1" />
-                    <label htmlFor="president1">President 1</label><br />
-                    <input type="radio" id="president2" name="president" value="president2" />
-                    <label htmlFor="president2">President 2</label><br />
-                    <input type="radio" id="president3" name="president" value="president3" />
-                    <label htmlFor="president3">President 3</label><br />
+                {/* <h2>President</h2> */}
+                <form onSubmit={(e) => handleSubmit(e)}>
+                    <div onChange={(e) => handleChange(e)}>
+                        {candidates.map((candidate) => {
+                            return (
+                                <div className="candidate">
+                                    <input
+                                        type="radio"
+                                        name="candidate"
+                                        value={candidate.name}
+                                    />
+                                    <label>{candidate.name}</label>
+                                </div>                                
+                            );
+                        })}
+                    </div>
+
+                    <div className="button-container">
+                        <button>Submit</button>
+                    </div>
                 </form>
             </div>
-
-            <br />
-            <button>Submit</button>
         </div>
-    )
-}
+    );
+};
 
 export default VotingView;
