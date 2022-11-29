@@ -1,9 +1,9 @@
-.App {
+/* .App { */
   /* text-align: center; */
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
-}
+  align-items: center; */
+/* } */
 
 .App-link {
   color: #61dafb;
@@ -44,7 +44,7 @@ table {
   background-color: ghostwhite;
   padding: 2rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin: 50px;
+  margin: 50px 25%;
   border-radius: 15px;
   color: mediumblue;
 }
@@ -57,7 +57,7 @@ table {
   background-color: ghostwhite;
   padding: 2rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin: 50px;
+  margin: 50px 25%;
   border-radius: 15px;
   color: mediumblue
 }
@@ -185,4 +185,11 @@ button {
   gap: 10px;
   margin: 20px;
   width: 20rem;
+}
+
+.vote-success, .votersList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
