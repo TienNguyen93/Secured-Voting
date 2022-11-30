@@ -1,9 +1,20 @@
 import { VoterView } from "../views";
-import React from 'react'
+import React, { useEffect, useState } from "react";
 
 const VoterContainer = () => {
+    const [voters, setVoters] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:5000/voters")
+            .then((response) => response.json()
+            .then((data) => {
+            setVoters(data);
+            })
+        );
+    }, [voters]);
+
     return (
-        <VoterView />
+        <VoterView voters={voters}/>
     );
 };
 
