@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 const CandidateContainer = () => {
     const [candidates, setCandidates] = useState([]);
     const [newCandidate, setNewCandidate] = useState("");
+    const [selectedCandidate, setSelectedCandidate] = useState("");
 
     useEffect(() => {
         fetch("http://localhost:5000/candidates").then((response) =>
@@ -12,6 +13,19 @@ const CandidateContainer = () => {
             })
         );
     }, [candidates]);
+
+    const handleSelect = (e) => {
+        setSelectedCandidate(e.target.value);
+    };
+
+    const handleDelete = () => {
+        fetch(`http://localhost:5000/candidates/${selectedCandidate}`, {
+            method: "DELETE",
+        })
+            .then((response) => response.json())
+            .then((data) => console.log("delete method", data))
+            .catch((error) => console.log(error));
+    };
 
     const handleChange = (e) => {
         setNewCandidate(e.target.value);
@@ -35,6 +49,8 @@ const CandidateContainer = () => {
         <CandidateView
             handleChange={handleChange}
             handleSubmit={handleSubmit}
+            handleSelect={handleSelect}
+            handleDelete={handleDelete}
             candidates={candidates}
         />
     );
