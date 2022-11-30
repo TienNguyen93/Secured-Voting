@@ -10,9 +10,9 @@ const VotingView = (props) => {
                 {/* <h2>President</h2> */}
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <div onChange={(e) => handleChange(e)}>
-                        {candidates.map((candidate) => {
+                        {candidates.map((candidate, index) => {
                             return (
-                                <div className="candidate">
+                                <div key={index} className="candidate">
                                     <input
                                         type="radio"
                                         name="candidate"
