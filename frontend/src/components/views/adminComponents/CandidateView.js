@@ -4,7 +4,7 @@ import "./Candidate.css";
 import CandidateFormPopup from "./CandidateFormPopup";
 
 const CandidateView = (props) => {
-    const { handleChange, handleSubmit, candidates } = props;
+    const { handleChange, handleSubmit, handleSelect, handleDelete, candidates } = props;
     const [popupButton, setPopupButton] = useState(false);
 
     return (
@@ -14,6 +14,7 @@ const CandidateView = (props) => {
                 <h1>Candidates</h1>
 
                 <button onClick={() => setPopupButton(true)}>New</button>
+                <button onClick={() => handleDelete()}>Remove</button>
                 <CandidateFormPopup
                     trigger={popupButton}
                     setTrigger={setPopupButton}
@@ -39,6 +40,7 @@ const CandidateView = (props) => {
                 <table className="table">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Name</th>
                             <th>Vote Count</th>
                         </tr>
@@ -47,6 +49,9 @@ const CandidateView = (props) => {
                         {candidates.map((candidate) => {
                             return (
                                 <tr>
+                                    <td>
+                                        <input type="radio" name="id" value={candidate._id} onClick={(e) => handleSelect(e)} />
+                                    </td>
                                     <td>{candidate.name}</td>
                                     <td>{candidate.voteCount}</td>
                                 </tr>
