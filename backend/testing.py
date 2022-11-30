@@ -121,15 +121,15 @@ def login():
     if voter_collection.find_one({"email": email}):
         email_found = voter_collection.find_one({"email": email})
         if password == email_found['password']:
-            return 'Voter'
+            return {'Voter': email_found}
 
     if admin_collection.find_one({"email": email}):
         email_found = admin_collection.find_one({"email": email})
         if password == email_found['password']:
-            return 'Admin'
+            return {'Admin': email_found}
 
     else:
-        return "None"
+        return {"None": "none"}
 
 
 # for authenticate the registered voter

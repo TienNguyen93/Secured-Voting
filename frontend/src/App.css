@@ -146,6 +146,7 @@ button {
   width: 20rem;
   border: 1.5px solid red;
   padding: 5px;
+  text-align: center;
 }
 
 .error-title {

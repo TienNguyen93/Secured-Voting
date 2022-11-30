@@ -7,6 +7,7 @@ const SigninView = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [response, setResponse] = useState("")
+    // const [item, setItem] = useState(localStorage.getItem("item") || "")
 
     const onSubmitForm = event => {
         event.preventDefault()
@@ -21,7 +22,11 @@ const SigninView = () => {
 
         axios(configuration)
             .then((result) => {
-                setResponse(result.data)
+                console.log('hellooooooo', result.data, typeof result.data)
+                const keys = Object.keys(result.data)
+                const values = Object.values(result.data)
+                setResponse(keys[0])
+                localStorage.setItem("item", JSON.stringify(values[0]))
             })
             .catch((error) => {
                 console.log(error)
