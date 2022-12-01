@@ -218,7 +218,7 @@ def initialize():
     headers = {'Content-Type': "application/json"}
     if port == 5000:
         admin = AdminPerson()
-        blockchain = Blockchain('Presidential Election 2022')
+        blockchain = Blockchain('Election 2022')
         admin_pub_key = admin.pub_key
     # Get a copy of all registered neighbors from admin port 5000
     # And get admin public key for voting
