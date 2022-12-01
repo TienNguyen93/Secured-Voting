@@ -362,7 +362,30 @@ def resolve_nodes():
     response = {'message': 'Successfully updated the nodes'}
     return jsonify(response), 200
 
+# ---------------------- VOTING RESULT ------------------------#
+#update vote count in database
+@app.route('/vote_update', methods=['PUT'])
+def update_voting():
+    
+    #get voting count result in the chain
+    vote_result={}
+    vote_result=admin.count_vote(blockchain)
 
+    #update voting count for each candidate
+    for name in vote_result:
+            candidate={"name":name}
+            voteCount=vote_result[name]
+            update_vote_count={"$set":{'voteCount':voteCount}}
+            candidate_collection.update_one(candidate,update_vote_count)
+    #update voteCount in the database
+    result={}
+    candidates = candidate_collection.find(limit=100)
+    for candidate in candidates:
+        result[candidate["name"]]=candidate["voteCount"]
+    
+    return json.dumps(result)
+
+    
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
