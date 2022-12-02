@@ -4,8 +4,10 @@ import "./Voter.css";
 import CandidateFormPopup from "./CandidateFormPopup";
 
 const VoterView = (props) => {
-    const { handleChange, handleSubmit, voters } = props;
+    const { handleChange, handleSubmit, handleEdit, handleSelect, voters } =
+        props;
     const [popupButton, setPopupButton] = useState(false);
+    const [popupButtonEdit, setPopupButtonEdit] = useState(false);
 
     return (
         <div>
@@ -13,9 +15,9 @@ const VoterView = (props) => {
             <div className="VoterFormContainer">
                 <h1>Voters</h1>
                 <button onClick={() => setPopupButton(true)}>New</button>
-                <button>Remove</button>
-                <button>Edit</button>
+                <button onClick={() => setPopupButtonEdit(true)}>Edit</button>
 
+                {/* Popup form for new button */}
                 <CandidateFormPopup
                     trigger={popupButton}
                     setTrigger={setPopupButton}
@@ -34,7 +36,7 @@ const VoterView = (props) => {
                             required
                             onChange={(e) => handleChange(e)}
                         />
-						<br />
+                        <br />
 
                         <label>Last Name:</label>
                         <input
@@ -43,7 +45,7 @@ const VoterView = (props) => {
                             required
                             onChange={(e) => handleChange(e)}
                         />
-						<br />
+                        <br />
 
                         <label>Email:</label>
                         <input
@@ -52,7 +54,7 @@ const VoterView = (props) => {
                             required
                             onChange={(e) => handleChange(e)}
                         />
-						<br />
+                        <br />
 
                         <label>Date of Birth:</label>
                         <input
@@ -61,7 +63,7 @@ const VoterView = (props) => {
                             required
                             onChange={(e) => handleChange(e)}
                         />
-						<br />
+                        <br />
 
                         <label>Social Security Number:</label>
                         <input
@@ -76,10 +78,20 @@ const VoterView = (props) => {
                             }}
                             onChange={(e) => handleChange(e)}
                         />
-						<br />
+                        <br />
 
                         <button type="submit">Submit</button>
                     </form>
+                </CandidateFormPopup>
+                
+                {/* Popup form for edit button */}
+                <CandidateFormPopup
+                    trigger={popupButtonEdit}
+                    setTrigger={setPopupButtonEdit}
+                >
+                    {/* <form onClick={}>
+
+                    </form> */}
                 </CandidateFormPopup>
 
                 <table className="table">
@@ -103,6 +115,7 @@ const VoterView = (props) => {
                                             type="radio"
                                             name="id"
                                             value={voter._id}
+                                            onClick={(e) => handleSelect(e)}
                                         />
                                     </td>
                                     <td>{voter.firstname}</td>

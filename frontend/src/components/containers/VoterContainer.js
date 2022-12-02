@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 const VoterContainer = () => {
     const [voters, setVoters] = useState([]);
     const [newVoter, setNewVoter] = useState([]);
+    const [selectedVoter, setSelectedVoter] = useState("");
 
     useEffect(() => {
         fetch("http://localhost:5000/voters")
@@ -13,6 +14,10 @@ const VoterContainer = () => {
             })
         );
     }, [voters]);
+
+    const handleSelect = (e) => {
+        setSelectedVoter(e.target.value);
+    };
 
     const handleChange = (e) => {
         let new_voter = {};
@@ -26,9 +31,7 @@ const VoterContainer = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // newVoter.dob = newVoter.dob.substring(5, 7) + "/" + newVoter.dob.substring(8) + "/" + newVoter.dob.substring(0, 4);
-
-        console.log(parseInt(newVoter.ssn));
+        newVoter.dob = newVoter.dob.substring(5, 7) + "/" + newVoter.dob.substring(8) + "/" + newVoter.dob.substring(0, 4);
 
         const request = {
             method: "POST",
@@ -39,6 +42,7 @@ const VoterContainer = () => {
                 email: newVoter.email,
                 dob: newVoter.dob,
                 ssn: parseInt(newVoter.ssn),
+                password: "",
             }),
         }
         fetch(`http://localhost:5000/voters`, request)
@@ -50,7 +54,8 @@ const VoterContainer = () => {
     return (
         <VoterView
             handleChange={handleChange}
-            handleSubmit={handleSubmit} 
+            handleSubmit={handleSubmit}
+            handleSelect={handleSelect}
             voters={voters}/>
     );
 };
