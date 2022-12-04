@@ -139,11 +139,21 @@ def register(id):
     password = req.get("password", None)
     registered = req.get("registered", None)
     email = req.get("email", None)
+    firstname = req.get("firstname", None)
+    lastname = req.get("lastname", None)
+    dob = req.get("dob", None)
 
     # update the fields 
     voter = { "_id": id }
     updated_pass = {"$set" : 
-        {'password' : password, 'registered': registered, 'email': email}
+        {
+            'password' : password, 
+            'registered': registered, 
+            'email': email,
+            'firstname': firstname,
+            'lastname': lastname,
+            'dob': dob
+        }
     }
     voter_collection.update_one(voter, updated_pass)
     return {"update successfully" : 200}
