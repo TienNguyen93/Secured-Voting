@@ -6,7 +6,6 @@ import { NavbarData } from "./NavbarData";
 import "./Navbar.css";
 import { IconContext } from "react-icons";
 
-
 function Navbar() {
     const [navbar, setNavbar] = useState(false);
 
@@ -14,30 +13,34 @@ function Navbar() {
     return (
         <div>
             <IconContext.Provider value={{ color: "black" }}>
-            <div className="navbar">
-                <Link to="#" className="menu-bars">
-                    <FIcons.FaBars onClick={showNavbar} />
-                </Link>
-            </div>
-            <nav className={navbar ? "nav-menu active" : "nav-menu"}>
-                <ul className="nav-menu-items" onClick={showNavbar}>
-                    <li className="navbar-toggle">
-                        <Link to="#" className="menu-bars">
-                            <AiIcons.AiOutlineClose />
-                        </Link>
-                    </li>
-                    {NavbarData.map((tab, index) => {
-                        return (
-                            <li key={index} className={tab.cName}>
-                                <Link to={tab.path}>
-                                    {/* {tab.icon} */}
-                                    <span>{tab.title}</span>
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
+                <div className="navbar">
+                    <Link to="#" className="menu-bars">
+                        <FIcons.FaBars onClick={showNavbar} />
+                    </Link>
+                </div>
+                <nav className={navbar ? "nav-menu active" : "nav-menu"}>
+                    <ul className="nav-menu-items" onClick={showNavbar}>
+                        <li className="navbar-toggle">
+                            <Link to="#" className="menu-bars">
+                                <AiIcons.AiOutlineClose />
+                            </Link>
+                        </li>
+                        {NavbarData.map((tab, index) => {
+                            return (
+                                <li key={index} className={tab.cName}>
+                                    <Link to={tab.path}>
+                                        <span>{tab.title}</span>
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                        <li className="sign-out">
+                            <Link to="#">
+                                <span>Sign Out</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
             </IconContext.Provider>
         </div>
     );
