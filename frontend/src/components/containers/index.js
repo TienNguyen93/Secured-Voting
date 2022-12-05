@@ -5,3 +5,4 @@ export { default as VoteSuccessContainer } from './VoteSuccessContainer';
 export { default as AdminContainer } from './AdminContainer';
 export { default as CandidateContainer } from './CandidateContainer';
 export { default as VoterContainer } from './VoterContainer';
+export { default as PieChartContainer } from './PieChartContainer';
