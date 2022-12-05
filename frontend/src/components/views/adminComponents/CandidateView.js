@@ -4,7 +4,13 @@ import "./Candidate.css";
 import CandidateFormPopup from "./CandidateFormPopup";
 
 const CandidateView = (props) => {
-    const { handleChange, handleSubmit, handleSelect, handleDelete, candidates } = props;
+    const {
+        handleChange,
+        handleSubmit,
+        handleSelect,
+        handleDelete,
+        candidates,
+    } = props;
     const [popupButton, setPopupButton] = useState(false);
 
     return (
@@ -50,7 +56,12 @@ const CandidateView = (props) => {
                             return (
                                 <tr>
                                     <td>
-                                        <input type="radio" name="id" value={candidate._id} onClick={(e) => handleSelect(e)} />
+                                        <input
+                                            type="radio"
+                                            name="id"
+                                            value={candidate._id}
+                                            onClick={(e) => handleSelect(e)}
+                                        />
                                     </td>
                                     <td>{candidate.name}</td>
                                     <td>{candidate.voteCount}</td>
