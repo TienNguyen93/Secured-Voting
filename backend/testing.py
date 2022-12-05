@@ -364,7 +364,7 @@ def resolve_nodes():
 
 # ---------------------- VOTING RESULT ------------------------#
 #update vote count in database
-@app.route('/vote_update', methods=['PUT'])
+@app.route('/vote_update', methods=['GET'])
 def update_voting():
     
     #get voting count result in the chain
