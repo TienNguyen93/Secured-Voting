@@ -36,14 +36,22 @@ const VoterContainer = () => {
                     newVoter.firstname !== undefined
                         ? newVoter.firstname
                         : voter.firstname;
+                let last_name =
+                    newVoter.lastname !== undefined
+                        ? newVoter.lastname
+                        : voter.lastname;
+                let birthday =
+                    newVoter.dob !== undefined
+                        ? newVoter.dob
+                        : voter.dob;
 
                 const request = {
                     method: "PUT",
                     headers: { "content-Type": "application/json" },
                     body: JSON.stringify({
                         firstname: first_name,
-                        lastname: voter.lastname,
-                        dob: voter.dob,
+                        lastname: last_name,
+                        dob: birthday,
                         password: voter.password,
                         registered: voter.registered,
                         email: voter.email,
@@ -53,6 +61,8 @@ const VoterContainer = () => {
                     .then((response) => response.json())
                     .then((data) => console.log(data))
                     .catch((error) => console.log(error));
+
+                setNewVoter([]);
             }
         });
     };
