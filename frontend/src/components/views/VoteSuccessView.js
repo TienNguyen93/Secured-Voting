@@ -1,5 +1,6 @@
 import React from 'react';
 import checkmark from '../../image/checkmark.jpeg';
+import PieChart from "../containers/PieChartContainer";
 
 const VoteSuccessView = () => {
     return (
@@ -7,6 +8,9 @@ const VoteSuccessView = () => {
             <img className="checkmark" src={checkmark} alt={checkmark} />
             <h1 className="center">Success!</h1>
             <p className="center">Your vote has been cast.</p>
+
+            <PieChart />
+
             <button>Sign Out</button>
         </div>
     )

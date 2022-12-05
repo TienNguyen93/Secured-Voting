@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./navbar/Navbar";
 import "./adminComponents/Admin.css";
+import PieChart from "../containers/PieChartContainer";
 
 const AdminView = (props) => {
     const { chain } = props;
@@ -12,6 +13,9 @@ const AdminView = (props) => {
             <div className="AdminContainer">
                 <h1>Admin Dashboard</h1>
 
+                <PieChart />
+
+                <h2>Blockchain</h2>
                 <table className="table">
                     <thead>
                         <tr>
