@@ -7,6 +7,7 @@ const VotingContainer = () => {
     // Get candidates from database
     const [candidates, setCandidates] = useState([]);
     const [voterId, setVoterId] = useState("")
+    // const port = window.location.port;
     
     useEffect(() => {
         const logged = JSON.parse(localStorage.getItem("item"))
@@ -30,7 +31,6 @@ const VotingContainer = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // console.log("candidate?", votedCandidate)
 
         const requestInit = {
             method: "POST",

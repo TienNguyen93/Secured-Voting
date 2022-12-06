@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Navbar from "./navbar/Navbar";
 import "./adminComponents/Admin.css";
 import PieChart from "../containers/PieChartContainer";
 
 const AdminView = (props) => {
     const { chain } = props;
+    const chainArray = chain.chain;
 
     return (
         <div>
@@ -16,6 +16,7 @@ const AdminView = (props) => {
                 <PieChart />
 
                 <h2>Blockchain</h2>
+                <div className="blockchain-table">
                 <table className="table">
                     <thead>
                         <tr>
@@ -28,22 +29,25 @@ const AdminView = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {chain.map((block, index) => {
-                            if (index !== 0) {
-                                return (
-                                    <tr>
-                                        <td>{block.index}</td>
-                                        <td>{block.voter}</td>
-                                        <td>{block.candidate}</td>
-                                        <td>{block.timestamp}</td>
-                                        <td>{block.prev_hash}</td>
-                                        <td>{block.hash}</td>
-                                    </tr>
-                                );
-                            }
-                        })}
+                        {(chainArray !== undefined) ?
+                            chainArray.map((block, index) => {
+                                if (index !== 0) {
+                                    return (
+                                        <tr>
+                                            <td>{block.index}</td>
+                                            <td>{block.voter}</td>
+                                            <td>{block.candidate}</td>
+                                            <td>{block.timestamp}</td>
+                                            <td className="a">{block.prev_hash.slice(0,10) + "..."}</td>
+                                            <td>{block.hash.slice(0,10) + "..."}</td>
+                                        </tr>
+                                    );
+                                }
+                            }) : console.log("failed")
+                        }
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     );
