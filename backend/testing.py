@@ -226,16 +226,16 @@ def initialize():
     global admin_pub_key
     global blockchain
     headers = {'Content-Type': "application/json"}
-    if port == 5000:
+    if port == 5001:
         admin = AdminPerson()
         blockchain = Blockchain('Election 2022')
         admin_pub_key = admin.pub_key
     # Get a copy of all registered neighbors from admin port 5000
     # And get admin public key for voting
-    if port != 5000:
-        response = requests.get("http://127.0.0.1:5000/get_neighbors")
+    if port != 5001:
+        response = requests.get("http://127.0.0.1:5001/get_neighbors")
         nodes = set(response.json()['neighbors'])
-        response = requests.get("http://127.0.0.1:5000/get_pub_key")
+        response = requests.get("http://127.0.0.1:5001/get_pub_key")
         key_64 = response.json()['admin_pub_key']
         key_encoded = key_64.encode("utf-8")
         key = base64.b64decode(key_encoded)
@@ -294,7 +294,7 @@ def vote():
     vote["public_key"] = b64_v_pub_key
     vote["signed_vote"] = signed_vote
     headers = {'Content-Type': "application/json"}
-    requests.post(f'http://127.0.0.1:5000/vote/receive', data=json.dumps(vote), headers=headers)
+    requests.post(f'http://127.0.0.1:5001/vote/receive', data=json.dumps(vote), headers=headers)
     response = {'message': f'Vote was successfully sent'}
     return jsonify(response), 201
 
@@ -312,7 +312,7 @@ def receive_the_vote():
         if blockchain.is_valid_chain():
             block = blockchain.create_a_block(vote["voter"], vote["candidate"])
             blockchain.add_block_to_the_chain(block)
-            requests.get("http://127.0.0.1:5000/resolve")
+            requests.get("http://127.0.0.1:5001/resolve")
             response = {'message': f'Vote was successfully verified and added to the blockchain.'}
         else:
             response = {'message': f'The blockchain was tampered. Cannot add votes.'}
@@ -339,8 +339,8 @@ def poa_consensus():
     if len(nodes) == 0:
         response = {'message': 'There are no nodes in the network'}
 
-    # Get the main chain from admin: http://127.0.0.1:5000
-    response = requests.get("http://127.0.0.1:5000/chain")
+    # Get the main chain from admin: http://127.0.0.1:5001
+    response = requests.get("http://127.0.0.1:5001/chain")
     chain = response.json()['chain']
     headers = {'Content-Type': "application/json"}
 
@@ -395,12 +395,22 @@ def update_voting():
     
     return json.dumps(result)
 
+
+# ---------------------- RESETING THE CHAIN ------------------------
+@app.route('/clear_blockchain', methods=['POST'])
+def clear_the_blockchain():
+    global blockchain
+    blockchain.clear_the_chain() 
+    response = {'message': 'Successfully reset the blockchain'}
+    return jsonify(response), 200
+
+
     
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
-    parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
+    parser.add_argument('-p', '--port', default=5001, type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
 

@@ -1,8 +1,6 @@
 from blake3 import blake3
 import json
 from datetime import datetime
-from urllib.parse import urlparse
-import requests
 from POA import *
 
 
@@ -126,3 +124,8 @@ class Blockchain:
             # record current Block's hash as next Block's previous hash
             previous_hash = block.hash
         return True
+
+    
+    # Clears / Resets the Blockchain
+    def clear_the_chain(self):
+        self.chain = []
