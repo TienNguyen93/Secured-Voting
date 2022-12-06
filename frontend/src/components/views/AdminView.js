@@ -38,8 +38,8 @@ const AdminView = (props) => {
                                             <td>{block.voter}</td>
                                             <td>{block.candidate}</td>
                                             <td>{block.timestamp}</td>
-                                            <td className="a">{block.prev_hash}</td>
-                                            <td>{block.hash}</td>
+                                            <td className="a">{block.prev_hash.slice(0,10) + "..."}</td>
+                                            <td>{block.hash.slice(0,10) + "..."}</td>
                                         </tr>
                                     );
                                 }
