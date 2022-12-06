@@ -1,14 +1,19 @@
 import { VotingView } from "../views";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 
-const VotingContainer = () => {
+const VotingContainer = (props) => {
+    const { user } = props;
     const navigate = useNavigate();
     // Get candidates from database
     const [candidates, setCandidates] = useState([]);
     const [voterId, setVoterId] = useState("")
     // const port = window.location.port;
     
+    if (!user) {
+        return <Navigate to="/" replace />;
+    }
+
     useEffect(() => {
         const logged = JSON.parse(localStorage.getItem("item"))
         setVoterId(logged._id)
