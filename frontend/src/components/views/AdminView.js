@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios'
 import Navbar from "./navbar/Navbar";
 import "./adminComponents/Admin.css";
 import PieChart from "../containers/PieChartContainer";
@@ -7,12 +8,26 @@ const AdminView = (props) => {
     const { chain } = props;
     const chainArray = chain.chain;
 
+    const handleStart = () => {
+        const configuration = {
+            method: 'post',
+            url: 'http://localhost:5000/init',
+        }
+        axios(configuration)
+            .then(result => {
+                console.log('res here', result)
+            }) 
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
     return (
         <div>
             <Navbar />
             <div className="AdminContainer">
                 <h1>Admin Dashboard</h1>
-
+                <button onClick={handleStart}>Start Election</button>
                 <PieChart />
 
                 <h2>Blockchain</h2>
