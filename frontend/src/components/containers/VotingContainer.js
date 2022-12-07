@@ -8,6 +8,8 @@ const VotingContainer = () => {
     const [candidates, setCandidates] = useState([]);
     const [voterId, setVoterId] = useState("")
 
+    // const port = window.location.port;
+    
     useEffect(() => {
         const logged = JSON.parse(localStorage.getItem("item"))
         setVoterId(logged._id)
@@ -43,7 +45,6 @@ const VotingContainer = () => {
                 candidateCurrentVote = candidate.voteCount
             }
         })
-
 
         const requestInit = {
             method: "POST",
