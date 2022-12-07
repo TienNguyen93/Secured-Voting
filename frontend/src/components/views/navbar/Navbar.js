@@ -9,6 +9,11 @@ import { IconContext } from "react-icons";
 function Navbar() {
     const [navbar, setNavbar] = useState(false);
 
+    const handleSignOut = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
+
     const showNavbar = () => setNavbar(!navbar);
     return (
         <div>
@@ -35,8 +40,8 @@ function Navbar() {
                             );
                         })}
                         <li className="sign-out">
-                            <Link to="#">
-                                <span>Sign Out</span>
+                            <Link to="/">
+                                <span onClick={() => handleSignOut()}>Sign Out</span>
                             </Link>
                         </li>
                     </ul>

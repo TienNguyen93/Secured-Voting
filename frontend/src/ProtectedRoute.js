@@ -1,8 +1,8 @@
 import React from "react";
-import { Routes, Route, Link, Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ user, redirectPath = "/", children }) => {
-    if (!user) {
+const ProtectedRoute = ({ isAllowed, redirectPath = "/", children }) => {
+    if (!isAllowed) {
         return <Navigate to={redirectPath} replace />;
     }
 

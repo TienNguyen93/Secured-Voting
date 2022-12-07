@@ -1,8 +1,11 @@
-import React from 'react';
-import checkmark from '../../image/checkmark.jpeg';
+import React from "react";
+import checkmark from "../../image/checkmark.jpeg";
 import PieChart from "../containers/PieChartContainer";
+import { Link } from "react-router-dom";
 
-const VoteSuccessView = () => {
+const VoteSuccessView = (props) => {
+    const { handleSignOut } = props;
+
     return (
         <div className="vote-success">
             <img className="checkmark" src={checkmark} alt={checkmark} />
@@ -10,10 +13,12 @@ const VoteSuccessView = () => {
             <p className="center">Your vote has been cast.</p>
 
             <PieChart />
-
-            <button>Sign Out</button>
+            
+            <Link to="/">
+                <button onClick={() => handleSignOut()}>Sign Out</button>
+            </Link>
         </div>
-    )
-}
+    );
+};
 
 export default VoteSuccessView;

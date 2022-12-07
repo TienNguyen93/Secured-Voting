@@ -4,12 +4,11 @@ import { useState } from 'react';
 import axios from 'axios'
 
 const SigninView = (props) => {
-    // const { user } = props;
+    const { handler } = props;
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [response, setResponse] = useState("")
     // const [item, setItem] = useState(localStorage.getItem("item") || "")
-    // console.log(user);
 
     const onSubmitForm = event => {
         event.preventDefault()
@@ -29,7 +28,7 @@ const SigninView = (props) => {
                 const values = Object.values(result.data)
                 setResponse(keys[0])
                 localStorage.setItem("item", JSON.stringify(values[0]))
-                // user = localStorage.getItem("item");
+                handler(values[0]);
             })
             .catch((error) => {
                 console.log(error)

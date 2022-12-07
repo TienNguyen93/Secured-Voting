@@ -16,23 +16,37 @@ import ListVoters from "./components/ListVoters";
 import ProtectedRoute from "./ProtectedRoute";
 
 const App = () => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState("");
+    const [voters, setVoters] = useState([]);
 
-    // const handleLogin = () => setUser({ id: "1", name: "robin" });
-    // const handleLogout = () => setUser(null);
-    // console.log(localStorage.getItem("item"));
-    // localStorage.setItem("item", JSON.stringify(values[0]))
-    // console.log(localStorage);
+    const handler = (e) => {
+        setUser(e.firstname);
+    };
+
+    useEffect(() => {
+        fetch("http://localhost:5000/voters").then((response) =>
+            response.json().then((data) => {
+                setVoters(data);
+            })
+        );
+    }, [voters]);
 
     return (
         <div className="App">
             <Routes>
-                <Route exact path="/" element={<SigninContainer />} />
+                <Route
+                    exact
+                    path="/"
+                    element={<SigninContainer handler={handler} />}
+                />
                 <Route exact path="/signup" element={<SignupContainer />} />
 
                 {/* Voting Routes */}
-                <Route element={<ProtectedRoute user={user} />}>
+                <Route element={<ProtectedRoute isAllowed={!!user} />}>
                     <Route exact path="/voting" element={<VotingContainer />} />
+                </Route>
+
+                <Route element={<ProtectedRoute isAllowed={!!user && voters.voted} />}>
                     <Route
                         exact
                         path="/vote-success"
@@ -44,17 +58,25 @@ const App = () => {
                 <Route exact path="/voters" element={<ListVoters />} />
 
                 {/* Admin Routes */}
-                <Route exact path="/admin" element={<AdminContainer />} />
                 <Route
-                    exact
-                    path="/admin/candidates"
-                    element={<CandidateContainer />}
-                />
-                <Route
-                    exact
-                    path="/admin/voters"
-                    element={<VoterContainer />}
-                />
+                    element={
+                        <ProtectedRoute
+                            isAllowed={!!user && user.includes("Admin")}
+                        />
+                    }
+                >
+                    <Route exact path="/admin" element={<AdminContainer />} />
+                    <Route
+                        exact
+                        path="/admin/candidates"
+                        element={<CandidateContainer />}
+                    />
+                    <Route
+                        exact
+                        path="/admin/voters"
+                        element={<VoterContainer />}
+                    />
+                </Route>
             </Routes>
         </div>
     );
