@@ -96,6 +96,10 @@ const VotingContainer = (props) => {
                                 method: "PUT",
                                 headers: { "content-Type": "application/json" },
                                 body: JSON.stringify({
+                                    firstname: voter.firstname,
+                                    lastname: voter.lastname,
+                                    dob: voter.dob,
+                                    ssn: voter.ssn,
                                     password: voter.password,
                                     email: voter.email,
                                     registered: voter.registered,

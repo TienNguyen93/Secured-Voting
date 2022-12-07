@@ -46,7 +46,7 @@ const VoteSuccessView = (props) => {
         legend: { textStyle: { fontSize: 16 } },
     };
 
-    console.log('candis', candidates)
+    // console.log('candis', candidates)
 
     return (
         <div className="vote-success">
