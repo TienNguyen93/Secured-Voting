@@ -142,6 +142,7 @@ def register(id):
     firstname = req.get("firstname", None)
     lastname = req.get("lastname", None)
     dob = req.get("dob", None)
+    voted = req.get("voted", None)
 
     # update the fields 
     voter = { "_id": id }
@@ -152,7 +153,8 @@ def register(id):
             'email': email,
             'firstname': firstname,
             'lastname': lastname,
-            'dob': dob
+            'dob': dob,
+            'voted': voted
         }
     }
     voter_collection.update_one(voter, updated_pass)
