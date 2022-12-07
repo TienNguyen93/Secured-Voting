@@ -3,11 +3,13 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios'
 
-const SigninView = () => {
+const SigninView = (props) => {
+    // const { user } = props;
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [response, setResponse] = useState("")
     // const [item, setItem] = useState(localStorage.getItem("item") || "")
+    // console.log(user);
 
     const onSubmitForm = event => {
         event.preventDefault()
@@ -27,6 +29,7 @@ const SigninView = () => {
                 const values = Object.values(result.data)
                 setResponse(keys[0])
                 localStorage.setItem("item", JSON.stringify(values[0]))
+                // user = localStorage.getItem("item");
             })
             .catch((error) => {
                 console.log(error)
