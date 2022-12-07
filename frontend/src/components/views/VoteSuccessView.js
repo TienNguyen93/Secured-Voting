@@ -3,8 +3,10 @@ import checkmark from '../../image/checkmark.jpeg';
 // import PieChart from "../containers/PieChartContainer";
 import { PieChartView } from "../views";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const VoteSuccessView = () => {
+const VoteSuccessView = (props) => {
+  const { handleSignOut } = props;
     const [candidates, setCandidates] = useState([]);
     const [isShowed, setIsShowed] = useState(false)
 
@@ -51,17 +53,17 @@ const VoteSuccessView = () => {
             <img className="checkmark" src={checkmark} alt={checkmark} />
             <h1 className="center">Success!</h1>
             <p className="center">Your vote has been cast.</p>
-
+            
             {isShowed
                 ? <PieChartView data={data} options={options} />
                 : <h1>Chart is loading, please wait</h1>
             }
             
-            <div>
-                <button>Sign Out</button>
-            </div>
+            <Link to="/">
+                <button onClick={() => handleSignOut()}>Sign Out</button>
+            </Link>
         </div>
-    )
-}
+    );
+};
 
 export default VoteSuccessView;

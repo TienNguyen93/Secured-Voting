@@ -1,12 +1,15 @@
 import { VoteSuccessView } from "../views";
-import React, { Component } from 'react';
+import React from "react";
 
-class VoteSuccessContainer extends Component {
-    render() {
-        return (
-            <VoteSuccessView />
-        )
-    }
-}
+const VoteSuccessContainer = () => {
+    const handleSignOut = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
+
+    return (
+        <VoteSuccessView handleSignOut={handleSignOut}/>
+    );
+};
 
 export default VoteSuccessContainer;

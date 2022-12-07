@@ -1,12 +1,10 @@
 import { SigninView } from "../views";
-import React, { Component }  from 'react';
+import React from "react";
 
-class SigninContainer extends Component {
-    render() {
-        return (
-            <SigninView />
-        )
-    }
-}
+const SigninContainer = (props) => {
+    const { handler } = props;
+
+    return <SigninView handler={handler}/>;
+};
 
 export default SigninContainer;
