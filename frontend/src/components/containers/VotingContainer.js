@@ -9,13 +9,12 @@ const VotingContainer = (props) => {
     const [voterId, setVoterId] = useState("")
     const port = window.location.port;
     const [voter, setVoter] = useState([]);
+    const [votedCandidate, setVotedCandidate] = useState("")
 
     useEffect(() => {
         const logged = JSON.parse(localStorage.getItem("item"));
         setVoterId(logged._id);
     }, []);
-
-    let votedCandidate = "";
 
     useEffect(() => {
         fetch("http://localhost:5000/candidates").then((response) =>
@@ -37,10 +36,8 @@ const VotingContainer = (props) => {
     };
 
     const handleChange = (e) => {
-        votedCandidate = e.target.value;
+        setVotedCandidate(e.target.value);
     };
-
-    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -55,6 +52,8 @@ const VotingContainer = (props) => {
                 candidateCurrentVote = candidate.voteCount
             }
         })
+        
+        console.log(votedCandidate)
 
         const requestInit = {
             method: "POST",
