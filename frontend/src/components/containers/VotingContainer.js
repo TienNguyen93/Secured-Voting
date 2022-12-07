@@ -7,7 +7,7 @@ const VotingContainer = (props) => {
     // Get candidates from database
     const [candidates, setCandidates] = useState([]);
     const [voterId, setVoterId] = useState("")
-    // const port = window.location.port;
+    const port = window.location.port;
 
     useEffect(() => {
         const logged = JSON.parse(localStorage.getItem("item"));
@@ -54,7 +54,7 @@ const VotingContainer = (props) => {
             headers: { "content-Type": "application/json" },
             body: JSON.stringify({}),
         };
-        fetch(`http://localhost:5000/init`, requestInit)
+        fetch(`http://localhost:5${port.slice(1, 4)}/init`, requestInit)
             .then((response) => response.json())
             .then((data) => {
                 if (data.message === "You are now in network") {
@@ -66,7 +66,7 @@ const VotingContainer = (props) => {
                             voter: voterId
                         }), 
                     }
-                    fetch(`http://localhost:5000/vote`, requestVote)
+                    fetch(`http://localhost:5${port.slice(1, 4)}/vote`, requestVote)
                         .then((response) => response.json())
                         .then((data) => console.log("post method vote", data))
 

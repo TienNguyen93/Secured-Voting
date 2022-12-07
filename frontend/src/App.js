@@ -42,11 +42,11 @@ const App = () => {
                 <Route exact path="/signup" element={<SignupContainer />} />
 
                 {/* Voting Routes */}
-                <Route element={<ProtectedRoute isAllowed={!!user} />}>
+                <Route element={<ProtectedRoute isAllowed={!!user && voters.voted === false } />}>
                     <Route exact path="/voting" element={<VotingContainer />} />
                 </Route>
 
-                <Route element={<ProtectedRoute isAllowed={!!user && voters.voted} />}>
+                <Route element={<ProtectedRoute isAllowed={!!user && voters.voted === true } />}>
                     <Route
                         exact
                         path="/vote-success"
