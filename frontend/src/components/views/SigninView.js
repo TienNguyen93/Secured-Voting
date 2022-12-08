@@ -8,9 +8,6 @@ const SigninView = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState("");
-    const [currVoterVoteStatus, setCurrVoterVoteStatus] = useState([]);
-    // const [item, setItem] = useState(localStorage.getItem("item") || "")
-    // let currVoterVoteStatus;
 
     const onSubmitForm = (event) => {
         event.preventDefault();
@@ -31,8 +28,6 @@ const SigninView = (props) => {
                 setResponse(keys[0]);
                 localStorage.setItem("item", JSON.stringify(values[0]));
                 handler(values[0]);
-                // setCurrVoterVoteStatus(values[0]);
-                // console.log(JSON.parse(localStorage.getItem("item")));
             })
             .catch((error) => {
                 console.log(error);
