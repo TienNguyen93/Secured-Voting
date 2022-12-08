@@ -1,84 +1,90 @@
-import React from 'react';
-import { Link, Navigate } from "react-router-dom";
-import { useState } from 'react';
-import axios from 'axios'
+import React from "react";
+import { Link, Navigate, NavigationType } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 const SigninView = (props) => {
     const { handler } = props;
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [response, setResponse] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [response, setResponse] = useState("");
+    const [currVoterVoteStatus, setCurrVoterVoteStatus] = useState([]);
     // const [item, setItem] = useState(localStorage.getItem("item") || "")
+    // let currVoterVoteStatus;
 
-    const onSubmitForm = event => {
-        event.preventDefault()
+    const onSubmitForm = (event) => {
+        event.preventDefault();
         const configuration = {
-            method: 'post',
-            url: 'http://localhost:5000/login',
+            method: "post",
+            url: "http://localhost:5000/login",
             data: {
                 email,
-                password
-            }
-        }
+                password,
+            },
+        };
 
         axios(configuration)
             .then((result) => {
-                console.log('hellooooooo', result.data, typeof result.data)
-                const keys = Object.keys(result.data)
-                const values = Object.values(result.data)
-                setResponse(keys[0])
-                localStorage.setItem("item", JSON.stringify(values[0]))
+                console.log("hellooooooo", result.data, typeof result.data);
+                const keys = Object.keys(result.data);
+                const values = Object.values(result.data);
+                setResponse(keys[0]);
+                localStorage.setItem("item", JSON.stringify(values[0]));
                 handler(values[0]);
+                // setCurrVoterVoteStatus(values[0]);
+                // console.log(JSON.parse(localStorage.getItem("item")));
             })
             .catch((error) => {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
 
     const Redirect = ({ res }) => {
-        if (res === 'Voter') {
-            return (
-                <Navigate to="/voting" />
-            )
+        if (res === "Voter") {
+            if (JSON.parse(localStorage.getItem("item")).voted) {
+                return <Navigate to="/vote-success" />;
+            } else {
+                return <Navigate to="/voting" />;
+            }
         }
-        if (res === 'Admin') {
-            return (
-                <Navigate to="/admin" />
-            )
+        if (res === "Admin") {
+            return <Navigate to="/admin" />;
         }
-        if (res === 'None') {
+        if (res === "None") {
             return (
                 <div className="error">
-                    <div className='error-title'>Wrong credentials</div>
-                    <div className='error-content'>Invalid email or password </div>
+                    <div className="error-title">Wrong credentials</div>
+                    <div className="error-content">
+                        Invalid email or password{" "}
+                    </div>
                 </div>
-            )
+            );
         }
-    }
+    };
 
     return (
         <div className="login-wrapper">
             <h1>Sign In</h1>
             <form onSubmit={onSubmitForm}>
-                <div className='input-container'>
+                <div className="input-container">
                     <input
                         type="email"
                         name="email"
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                     />
                 </div>
-                <div className='input-container'>
+                <div className="input-container">
                     <input
                         type="password"
                         name="password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                     />
                 </div>
-                <div className='button-container'>
+                <div className="button-container">
                     <button type="submit" onClick={onSubmitForm}>
                         Login
                     </button>
@@ -87,17 +93,18 @@ const SigninView = (props) => {
 
             <Redirect res={response} />
 
-            <div className='parent'>
-                <div className='child-one'>
+            <div className="parent">
+                <div className="child-one">
                     <p>New to Secured Voting?</p>
                 </div>
-                <div className='child-two'>
-                    <Link className="link" to={'/signup'}>Sign up</Link>
+                <div className="child-two">
+                    <Link className="link" to={"/signup"}>
+                        Sign up
+                    </Link>
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
 export default SigninView;
