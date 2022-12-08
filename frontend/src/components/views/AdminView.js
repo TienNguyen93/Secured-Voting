@@ -1,22 +1,32 @@
 import React from "react";
-import axios from 'axios'
-import Navbar from "./navbar/Navbar";
 import "./adminComponents/Admin.css";
-import PieChart from "../containers/PieChartContainer";
+import { useEffect, useState } from "react";
 
-const AdminView = ({ chain }) => {
-    const chainArray = chain.chain;
-    console.log('admin view chain', "& type is", typeof chainArray, chainArray)
+const AdminView = () => {
+    const [chain, setChain] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await (
+                await fetch(
+                    `http://localhost:5000/chain`
+                )
+            ).json()
+
+            setChain(data.chain)
+        }
+
+        const timer = setTimeout(() => {
+            fetchData()
+        }, 3000)
+
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
         <div>
-            <Navbar />
-            <div className="AdminContainer">
-                <h1>Admin Dashboard</h1>
-                <PieChart />
-
-                <h2>Blockchain</h2>
-                <div className="blockchain-table">
+            <div>
+                <div>
                     <table className="table">
                         <thead>
                             <tr>
@@ -29,21 +39,22 @@ const AdminView = ({ chain }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {chainArray.map((block, i) => {
+
+                            {chain.map((block) => {
                                 return [
-                                    <tr key={i}>
+                                    <tr key={block}>
                                         <td>{block.index}</td>
                                         <td>{block.voter}</td>
                                         <td>{block.candidate}</td>
                                         <td>{block.timestamp}</td>
                                         <td className="hash">
-                                            {parseInt(block.prev_hash) === 0 
-                                            ? block.prev_hash
-                                            : block.prev_hash.slice(0, 10) + "..."
+                                            {parseInt(block.prev_hash) === 0
+                                                ? block.prev_hash
+                                                : block.prev_hash.slice(0, 10) + "..."
                                             }
                                             <span className="tooltip">{block.prev_hash}</span>
                                         </td>
-                                        
+
                                         <td className="hash">
                                             {block.hash.slice(0, 10) + "..."}
                                             <span className="tooltip">{block.hash}</span>

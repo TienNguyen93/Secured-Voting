@@ -29,7 +29,7 @@ const App = () => {
                 setVoters(data);
             })
         );
-    }, [voters]);
+    }, []);
 
     return (
         <div className="App">
