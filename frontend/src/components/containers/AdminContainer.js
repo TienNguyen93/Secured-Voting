@@ -1,12 +1,16 @@
 import { AdminView } from "../views";
+// import AdminViewF from "../views/AdminViewF";
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
+import Navbar from "../views/navbar/Navbar";
+import "../views/adminComponents/Admin.css"
+
+import PieChart from "../containers/PieChartContainer";
 
 const AdminContainer = () => {
-    const [chain, setChain] = useState([]);
-    const [isRetrieved, setIsRetrieved] = useState(false)
+    const [isStarted, setIsStarted] = useState(false)
 
-    useEffect(() => {
+    const handleStart = () => {
         const configuration = {
             method: 'post',
             url: 'http://localhost:5000/init',
@@ -14,42 +18,42 @@ const AdminContainer = () => {
         axios(configuration)
             .then(result => {
                 console.log('res here', result)
+                setIsStarted(true)
             })
             .catch(error => {
                 console.log(error)
             })
-    })
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await (
-                await fetch(
-                    `http://localhost:5000/chain`
-                )
-            ).json()
-
-            setChain(data)
-        }
-        fetchData()
-
-        const timer = setTimeout(() => {    
-            setIsRetrieved(true)
-        }, 3000)
-
-        return () => clearTimeout(timer)
-    }, [])
-
-    console.log('admin container', chain, typeof chain)
+    }
 
     return (
-        <>
-            {isRetrieved
-                ? <AdminView chain={chain} />
-                : <h1 style={{ textAlign: 'center' }}>
-                    Please wait for data to retrieve
-                </h1>
-            }
-        </>
+        <div>
+            <Navbar />
+            <div className="AdminContainer">
+                <h1>Admin Dashboard</h1>
+                <button onClick={handleStart}>Start election</button>
+                <PieChart />
+
+                <h2>Blockchain</h2>
+                <div className="blockchain-table">
+                    {isStarted
+                        ? <AdminView />
+                        :
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Block</th>
+                                    <th>Voter ID</th>
+                                    <th>Voted Candidate</th>
+                                    <th>Timestamp</th>
+                                    <th>Previous Hash</th>
+                                    <th>Hash</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
     );
 };
 
