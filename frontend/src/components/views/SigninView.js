@@ -8,6 +8,7 @@ const SigninView = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState("");
+    const [user, setUser] = useState();
 
     const onSubmitForm = (event) => {
         event.preventDefault();
@@ -23,6 +24,7 @@ const SigninView = (props) => {
         axios(configuration)
             .then((result) => {
                 console.log("hellooooooo", result.data, typeof result.data);
+                setUser(result.data);
                 const keys = Object.keys(result.data);
                 const values = Object.values(result.data);
                 setResponse(keys[0]);
@@ -39,11 +41,11 @@ const SigninView = (props) => {
             window.localStorage.setItem("isLoggedIn", "true");
         }
         if (res === "Voter") {
-            // if (JSON.parse(localStorage.getItem("item")).voted) {
-            //     return <Navigate to="/vote-success" />;
-            // } else {
+            if (Object.values(user)[0].voted) {
+                return <Navigate to="/vote-success" />;
+            } else {
                 return <Navigate to="/voting" />;
-            // }
+            }
         }
         if (res === "Admin") {
             return <Navigate to="/admin" />;
