@@ -11,7 +11,6 @@ function Navbar() {
     const navigate = useNavigate();
 
     const handleSignOut = () => {
-        console.log(localStorage.getItem("item"));
         window.localStorage.clear();
         navigate("/");
     };
