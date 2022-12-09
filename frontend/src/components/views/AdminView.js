@@ -21,7 +21,7 @@ const AdminView = () => {
         }, 3000)
 
         return () => clearTimeout(timer)
-    }, [])
+    }, [chain])
 
     return (
         <div>
