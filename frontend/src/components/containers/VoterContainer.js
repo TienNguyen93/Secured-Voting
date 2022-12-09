@@ -52,9 +52,11 @@ const VoterContainer = () => {
                         firstname: first_name,
                         lastname: last_name,
                         dob: birthday,
+                        ssn: voter.ssn,
                         password: voter.password,
                         registered: voter.registered,
                         email: voter.email,
+                        voted: voter.voted,
                     }),
                 };
                 fetch(`http://localhost:5000/voters/${selectedVoter}`, request)

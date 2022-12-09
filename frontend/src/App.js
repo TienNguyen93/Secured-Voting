@@ -36,6 +36,14 @@ const App = () => {
         );
     }, []);
 
+    console.log(JSON.parse(localStorage.getItem("item")));
+
+    // voters.map((voter) => {
+    //     if (voter._id === JSON.parse(localStorage.getItem("item"))._id) {
+    //         console.log("dsfs");
+    //     }
+    // })
+
     return (
         <div className="App">
             <Routes>
@@ -47,8 +55,12 @@ const App = () => {
                 <Route exact path="/signup" element={<SignupContainer />} />
 
                 {/* Voting Routes */}
-                <Route element={<ProtectedRoute isAllowed={loggedIn && !window.localStorage.getItem("isAdmin")} />}>
+                <Route element={<ProtectedRoute isAllowed={loggedIn && !window.localStorage.getItem("isAdmin") && !JSON.parse(window.localStorage.getItem("item")).voted } />}>
                     <Route exact path="/voting" element={<VotingContainer />} />
+                </Route>
+
+                <Route element={<ProtectedRoute isAllowed={loggedIn && !window.localStorage.getItem("isAdmin")} />}>
+                    {/* <Route exact path="/voting" element={<VotingContainer />} /> */}
                     <Route
                         exact
                         path="/vote-success"
