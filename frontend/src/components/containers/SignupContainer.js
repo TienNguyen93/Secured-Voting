@@ -34,6 +34,7 @@ const SignupContainer = () => {
         } else {
             voters.map(voter => {
                 // if ssn match, retrieve voter's ID
+                //TODO: check if other information is correct
                 if (Number(registerVoter.ssn) === voter.ssn) {
                     const id = voter._id
                     if (voter.registered === true) {
@@ -43,9 +44,14 @@ const SignupContainer = () => {
                             method: "PUT",
                             headers: { "content-Type": "application/json" },
                             body: JSON.stringify({
+                                firstname: voter.firstname,
+                                lastname: voter.lastname,
+                                dob: voter.dob,
+                                ssn: voter.ssn,
                                 password: registerVoter.password,
                                 email: registerVoter.email,
                                 registered: true,
+                                voted: voter.voted,
                             }),
                         }
                         fetch(`http://localhost:5000/voters/${id}`, request)
