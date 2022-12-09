@@ -18,6 +18,11 @@ import ProtectedRoute from "./ProtectedRoute";
 const App = () => {
     const [user, setUser] = useState("");
     const [voters, setVoters] = useState([]);
+    const loggedIn = window.localStorage.getItem("isLoggedIn");
+
+    if (user === "Admin") {
+        window.localStorage.setItem("isAdmin", true);
+    }
 
     const handler = (e) => {
         setUser(e.firstname);
@@ -42,7 +47,7 @@ const App = () => {
                 <Route exact path="/signup" element={<SignupContainer />} />
 
                 {/* Voting Routes */}
-                <Route element={<ProtectedRoute isAllowed={!!user} />}>
+                <Route element={<ProtectedRoute isAllowed={loggedIn && !window.localStorage.getItem("isAdmin")} />}>
                     <Route exact path="/voting" element={<VotingContainer />} />
                     <Route
                         exact
@@ -58,7 +63,7 @@ const App = () => {
                 <Route
                     element={
                         <ProtectedRoute
-                            isAllowed={!!user && user.includes("Admin")}
+                            isAllowed={loggedIn && window.localStorage.getItem("isAdmin")}
                         />
                     }
                 >

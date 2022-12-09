@@ -1,6 +1,6 @@
 import { VotingView } from "../views";
 import React, { useEffect, useState } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const VotingContainer = (props) => {
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ const VotingContainer = (props) => {
 
     const handleSignOut = () => {
         localStorage.clear();
-        window.location.reload();
+        navigate("/");
     };
 
     const handleChange = (e) => {

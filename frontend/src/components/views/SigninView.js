@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate, NavigationType } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -8,9 +8,6 @@ const SigninView = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState("");
-    const [currVoterVoteStatus, setCurrVoterVoteStatus] = useState([]);
-    // const [item, setItem] = useState(localStorage.getItem("item") || "")
-    // let currVoterVoteStatus;
 
     const onSubmitForm = (event) => {
         event.preventDefault();
@@ -31,8 +28,6 @@ const SigninView = (props) => {
                 setResponse(keys[0]);
                 localStorage.setItem("item", JSON.stringify(values[0]));
                 handler(values[0]);
-                // setCurrVoterVoteStatus(values[0]);
-                // console.log(JSON.parse(localStorage.getItem("item")));
             })
             .catch((error) => {
                 console.log(error);
@@ -40,12 +35,15 @@ const SigninView = (props) => {
     };
 
     const Redirect = ({ res }) => {
+        if (res === "Voter" || res === "Admin") {
+            window.localStorage.setItem("isLoggedIn", "true");
+        }
         if (res === "Voter") {
-            if (JSON.parse(localStorage.getItem("item")).voted) {
-                return <Navigate to="/vote-success" />;
-            } else {
+            // if (JSON.parse(localStorage.getItem("item")).voted) {
+            //     return <Navigate to="/vote-success" />;
+            // } else {
                 return <Navigate to="/voting" />;
-            }
+            // }
         }
         if (res === "Admin") {
             return <Navigate to="/admin" />;
