@@ -90,7 +90,7 @@ const VotingContainer = (props) => {
                         .then((data) => console.log("update vote", data))
                         .catch((error) => console.log(error));
                     
-                    voter.map(voter => {
+                    voter.forEach(voter => {
                         if (voter._id === voterId) {
                             const updateVoter = {
                                 method: "PUT",
