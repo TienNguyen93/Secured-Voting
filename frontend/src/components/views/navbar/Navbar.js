@@ -10,7 +10,7 @@ function Navbar() {
     const [navbar, setNavbar] = useState(false);
 
     const handleSignOut = () => {
-        window.localStorage.clear();
+        localStorage.clear();
         window.location.reload();
     };
 

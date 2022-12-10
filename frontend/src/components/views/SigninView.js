@@ -12,6 +12,13 @@ const SigninView = (props) => {
 
     const onSubmitForm = (event) => {
         event.preventDefault();
+
+        window.localStorage.clear();
+        if (email === "" || password === "") {
+            alert("Please fill in all fields");
+            window.location.reload();
+        }
+
         const configuration = {
             method: "post",
             url: "http://localhost:5000/login",
@@ -73,6 +80,7 @@ const SigninView = (props) => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
+                        required="required"
                     />
                 </div>
                 <div className="input-container">
@@ -82,6 +90,7 @@ const SigninView = (props) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
+                        required="required"
                     />
                 </div>
                 <div className="button-container">

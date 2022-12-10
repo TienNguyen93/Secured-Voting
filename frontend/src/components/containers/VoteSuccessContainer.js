@@ -5,7 +5,6 @@ const VoteSuccessContainer = () => {
 
     const handleSignOut = () => {
         localStorage.clear();
-        // navigate("/");
         window.location.reload();
     };
 
