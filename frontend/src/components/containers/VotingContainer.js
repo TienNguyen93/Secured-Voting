@@ -32,7 +32,8 @@ const VotingContainer = (props) => {
 
     const handleSignOut = () => {
         localStorage.clear();
-        navigate("/");
+        // navigate("/");
+        window.location.reload();
     };
 
     const handleChange = (e) => {

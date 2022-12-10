@@ -8,7 +8,7 @@ import "../views/adminComponents/Admin.css"
 import PieChart from "../containers/PieChartContainer";
 
 const AdminContainer = () => {
-    const [isStarted, setIsStarted] = useState(false)
+    const [isStarted, setIsStarted] = useState(false);
 
     const handleStart = () => {
         const configuration = {

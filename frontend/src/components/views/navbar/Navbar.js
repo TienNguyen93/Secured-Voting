@@ -12,7 +12,8 @@ function Navbar() {
 
     const handleSignOut = () => {
         window.localStorage.clear();
-        navigate("/");
+        // navigate("/");
+        window.location.reload();
     };
 
     const showNavbar = () => setNavbar(!navbar);
