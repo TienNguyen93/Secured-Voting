@@ -29,17 +29,30 @@ const SignupContainer = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent browser reload/refresh after submit.
-        console.log('enter press')
+
+        registerVoter.dob =
+            registerVoter.dob.substring(5, 7) +
+            "/" +
+            registerVoter.dob.substring(8) +
+            "/" +
+            registerVoter.dob.substring(0, 4);
+
         if (registerVoter.password !== registerVoter.confirmPassword) {
             alert("Passwords do not match.");
         } else {
-            voters.forEach(voter => {
+            voters.every((voter, index) => {
                 // if ssn match, retrieve voter's ID
                 //TODO: check if other information is correct
-                if (Number(registerVoter.ssn) === voter.ssn) {
-                    const id = voter._id
+                if (
+                    Number(registerVoter.ssn) === voter.ssn &&
+                    registerVoter.firstname === voter.firstname &&
+                    registerVoter.lastname === voter.lastname &&
+                    registerVoter.dob === voter.dob &&
+                    voter.registered === false
+                ) {
+                    const id = voter._id;
                     if (voter.registered === true) {
-                        console.log('User already registered')
+                        console.log("User already registered");
                     } else {
                         const request = {
                             method: "PUT",
@@ -52,19 +65,24 @@ const SignupContainer = () => {
                                 password: registerVoter.password,
                                 email: registerVoter.email,
                                 registered: true,
-                                voted: voter.voted,
+                                voted: false,
                             }),
-                        }
+                        };
                         fetch(`http://localhost:5000/voters/${id}`, request)
                             .then((response) => response.json())
-                            .then((data) => console.log('put method', data))
-                            .catch(error => console.log(error))
+                            .then((data) => console.log("put method", data))
+                            .catch((error) => console.log(error));
 
                         alert("You have successfully registered.");
                         navigate("/");
+                        return false;
                     }
+                } else if (index === Object.keys(voters).length - 1) {
+                    alert("Information does not match. Please try again.");
                 }
-            })
+
+                return true;
+            });
         }
     };
 

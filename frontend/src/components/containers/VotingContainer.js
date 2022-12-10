@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const VotingContainer = (props) => {
     const navigate = useNavigate();
+    const { isVoted } = props;
     // Get candidates from database
     const [candidates, setCandidates] = useState([]);
     const [voterId, setVoterId] = useState("")
@@ -109,13 +110,32 @@ const VotingContainer = (props) => {
                                 .then((response) => response.json())
                                 .then((data) => console.log("update voter", data))
                                 .catch((error) => console.log(error));
+
+                            isVoted();
+                            
+                            const updateVoterLocal = {
+                                firstname: voter.firstname,
+                                lastname: voter.lastname,
+                                dob: voter.dob,
+                                ssn: voter.ssn,
+                                password: voter.password,
+                                email: voter.email,
+                                registered: voter.registered,
+                                voted: true,
+                                _id: voter._id,
+                            }
+
+                            localStorage.removeItem("item");
+                            localStorage.setItem("item", JSON.stringify(updateVoterLocal));
                         }
                     })
                 }
             })
             .catch((error) => console.log("error at /init", error));
-
-        navigate("/vote-success");
+        
+        setTimeout(() => {
+            navigate("/vote-success")   
+        }, 3000);
     };
 
     return (
