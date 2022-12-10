@@ -24,12 +24,13 @@ table {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin: 10px;
+  margin: 20px 10px;
   width: 20rem;
 }
 
 
-.login-wrapper, .voting-page {
+.login-wrapper,
+.voting-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,7 +60,7 @@ table {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 20rem;
+  /* width: 20rem; */
   margin-bottom: 10px;
 }
 
@@ -118,10 +119,15 @@ button {
   padding-bottom: 8px;
 }
 
+button:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
 .child-one {
   display: inline-block;
   vertical-align: middle;
-  margin-right: 80px;
+  margin-right: 10px;
 }
 
 .child-two {
@@ -129,8 +135,13 @@ button {
   vertical-align: middle;
 }
 
+.child-two:hover {
+  opacity: 0.5;
+}
+
 .link {
   text-decoration: none;
+  color: mediumblue;
 }
 
 .error {
@@ -180,19 +191,19 @@ button {
   width: 100%;
 }
 
-.vote-success, .votersList {
+.vote-success,
+.votersList {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-#button-container {
-  width: 100%;
+.button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: -20%;
+  margin-top: 5px;
 }
 
 #signOut {
@@ -205,3 +216,20 @@ button {
 #signOut button {
   background-color: grey;
 }
+
+.wrap {
+  display: grid;
+  gap: 10px;
+  grid-auto-flow: dense;
+  width: auto;
+  grid-template-columns: 200px 5fr 2fr;
+}
+
+/* .signup-form {
+  align-items: left;
+} */
+
+.login-form {
+  margin-top: -25px;
+}
+

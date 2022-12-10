@@ -64,8 +64,8 @@ const SigninView = (props) => {
 
     return (
         <div className="login-wrapper">
-            <h1>Sign In</h1>
-            <form onSubmit={onSubmitForm}>
+            <h1>Login</h1>
+            <form className="login-form" onSubmit={onSubmitForm}>
                 <div className="input-container">
                     <input
                         type="email"

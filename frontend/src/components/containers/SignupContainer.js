@@ -29,6 +29,7 @@ const SignupContainer = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent browser reload/refresh after submit.
+        console.log('enter press')
         if (registerVoter.password !== registerVoter.confirmPassword) {
             alert("Passwords do not match.");
         } else {
