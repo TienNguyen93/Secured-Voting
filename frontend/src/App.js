@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 //Components
 import {
@@ -17,9 +17,7 @@ import ProtectedRoute from "./ProtectedRoute";
 
 const App = () => {
     const [user, setUser] = useState("");
-    const [voters, setVoters] = useState([]);
     const loggedIn = window.localStorage.getItem("isLoggedIn");
-    const currPath = window.location.pathname;
 
     if (user === "Admin") {
         window.localStorage.setItem("isAdmin", true);
@@ -28,14 +26,6 @@ const App = () => {
     const handler = (e) => {
         setUser(e.firstname);
     };
-
-    useEffect(() => {
-        fetch("http://localhost:5000/voters").then((response) =>
-            response.json().then((data) => {
-                setVoters(data);
-            })
-        );
-    }, []);
 
     return (
         <div className="App">

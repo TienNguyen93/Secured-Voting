@@ -1,6 +1,6 @@
 import { AdminView } from "../views";
 // import AdminViewF from "../views/AdminViewF";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios'
 import Navbar from "../views/navbar/Navbar";
 import "../views/adminComponents/Admin.css"
