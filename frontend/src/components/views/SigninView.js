@@ -12,6 +12,9 @@ const SigninView = (props) => {
 
     const onSubmitForm = (event) => {
         event.preventDefault();
+
+        window.localStorage.clear();
+
         const configuration = {
             method: "post",
             url: "http://localhost:5000/login",

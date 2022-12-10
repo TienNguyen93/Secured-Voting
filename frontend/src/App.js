@@ -31,34 +31,11 @@ const App = () => {
         <div className="App">
             <Routes>
                 <Route
-                    element={
-                        <ProtectedRoute
-                            isAllowed={
-                                window.localStorage.getItem("item") === null
-                            }
-                            redirectPath={
-                                loggedIn
-                                    ? window.localStorage.getItem("isAdmin")
-                                        ? "/admin"
-                                        : JSON.parse(
-                                              window.localStorage.getItem(
-                                                  "item"
-                                              )
-                                          ).voted
-                                        ? "/vote-success"
-                                        : "/voting"
-                                    : "/"
-                            }
-                        />
-                    }
-                >
-                    <Route
-                        exact
-                        path="/"
-                        element={<SigninContainer handler={handler} />}
-                    />
-                    <Route exact path="/signup" element={<SignupContainer />} />
-                </Route>
+                    exact
+                    path="/"
+                    element={<SigninContainer handler={handler} />}
+                />
+                <Route exact path="/signup" element={<SignupContainer />} />
 
                 {/* Voting Routes */}
                 <Route
