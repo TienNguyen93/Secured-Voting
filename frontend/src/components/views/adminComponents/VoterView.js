@@ -80,7 +80,7 @@ const VoterView = (props) => {
                     trigger={popupButtonEdit}
                     setTrigger={setPopupButtonEdit}
                 >
-                    {voters.forEach((voter) => {
+                    {voters.map((voter) => {
                         if (voter._id === selectedVoter) {
                             return (
                                 <form onSubmit={(e) => {

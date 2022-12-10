@@ -6,6 +6,10 @@ const CandidateContainer = () => {
     const [newCandidate, setNewCandidate] = useState("");
     const [selectedCandidate, setSelectedCandidate] = useState("");
 
+    const reload = () => {
+        window.location.reload();
+    }
+
     useEffect(() => {
         fetch("http://localhost:5000/candidates").then((response) =>
             response.json().then((data) => {
@@ -25,6 +29,8 @@ const CandidateContainer = () => {
             .then((response) => response.json())
             .then((data) => console.log("delete method", data))
             .catch((error) => console.log(error));
+
+        setTimeout(reload, 1000);
     };
 
     const handleChange = (e) => {
@@ -43,6 +49,8 @@ const CandidateContainer = () => {
             .then((response) => response.json())
             .then((data) => console.log("post method", data))
             .catch((error) => console.log(error));
+        
+        setTimeout(reload, 1000);
     };
 
     return (

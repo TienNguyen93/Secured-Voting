@@ -6,6 +6,10 @@ const VoterContainer = () => {
     const [newVoter, setNewVoter] = useState([]);
     const [selectedVoter, setSelectedVoter] = useState({});
 
+    const reload = () => {
+        window.location.reload();
+    }
+
     useEffect(() => {
         fetch("http://localhost:5000/voters").then((response) =>
             response.json().then((data) => {
@@ -67,6 +71,8 @@ const VoterContainer = () => {
                 setNewVoter([]);
             }
         });
+
+        setTimeout(reload, 1000);
     };
 
     const handleChange = (e) => {
@@ -104,6 +110,8 @@ const VoterContainer = () => {
             .then((response) => response.json())
             .then((data) => console.log("post method", data))
             .catch((error) => console.log(error));
+
+        setTimeout(reload, 1000);
     };
 
     return (
