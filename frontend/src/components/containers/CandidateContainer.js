@@ -12,7 +12,7 @@ const CandidateContainer = () => {
                 setCandidates(data);
             })
         );
-    }, [candidates]);
+    }, []);
 
     const handleSelect = (e) => {
         setSelectedCandidate(e.target.value);

@@ -12,7 +12,7 @@ const VoterContainer = () => {
                 setVoters(data);
             })
         );
-    }, [voters]);
+    }, []);
 
     const handleSelect = (e) => {
         setSelectedVoter(e.target.value);
