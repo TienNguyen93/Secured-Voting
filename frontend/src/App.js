@@ -91,7 +91,9 @@ const App = () => {
                         <ProtectedRoute
                             isAllowed={
                                 loggedIn &&
-                                !window.localStorage.getItem("isAdmin")
+                                !window.localStorage.getItem("isAdmin") &&
+                                JSON.parse(window.localStorage.getItem("item"))
+                                    .voted
                             }
                         />
                     }
