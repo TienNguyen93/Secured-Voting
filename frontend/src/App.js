@@ -18,6 +18,7 @@ import ProtectedRoute from "./ProtectedRoute";
 const App = () => {
     const [user, setUser] = useState("");
     const loggedIn = window.localStorage.getItem("isLoggedIn");
+    const [vote, setVote] = useState(false)
 
     if (user === "Admin") {
         window.localStorage.setItem("isAdmin", true);
@@ -26,6 +27,11 @@ const App = () => {
     const handler = (e) => {
         setUser(e.firstname);
     };
+
+    const isVoted = () => {
+        setVote(true);
+        console.log(vote);
+    }
 
     return (
         <div className="App">
@@ -50,7 +56,7 @@ const App = () => {
                         />
                     }
                 >
-                    <Route exact path="/voting" element={<VotingContainer />} />
+                    <Route exact path="/voting" element={<VotingContainer isVoted={isVoted} />} />
                 </Route>
 
                 <Route
@@ -58,9 +64,8 @@ const App = () => {
                         <ProtectedRoute
                             isAllowed={
                                 loggedIn &&
-                                !window.localStorage.getItem("isAdmin") &&
-                                JSON.parse(window.localStorage.getItem("item"))
-                                    .voted
+                                (JSON.parse(window.localStorage.getItem("item"))
+                                    .voted || vote )
                             }
                         />
                     }
