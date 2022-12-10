@@ -4,8 +4,14 @@ import "./Voter.css";
 import CandidateFormPopup from "./CandidateFormPopup";
 
 const VoterView = (props) => {
-    const { handleChange, handleSubmit, handleEdit, handleSelect, selectedVoter, voters } =
-        props;
+    const {
+        handleChange,
+        handleSubmit,
+        handleEdit,
+        handleSelect,
+        selectedVoter,
+        voters,
+    } = props;
     const [popupButton, setPopupButton] = useState(false);
     const [popupButtonEdit, setPopupButtonEdit] = useState(false);
 
@@ -35,6 +41,12 @@ const VoterView = (props) => {
                             name="firstname"
                             required
                             onChange={(e) => handleChange(e)}
+                            maxLength={20}
+                            onKeyPress={(event) => {
+                                if (!/[a-zA-Z]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
                         />
                         <br />
 
@@ -44,6 +56,12 @@ const VoterView = (props) => {
                             name="lastname"
                             required
                             onChange={(e) => handleChange(e)}
+                            maxLength={20}
+                            onKeyPress={(event) => {
+                                if (!/[a-zA-Z]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
                         />
                         <br />
 
@@ -74,7 +92,7 @@ const VoterView = (props) => {
                         <button type="submit">Submit</button>
                     </form>
                 </CandidateFormPopup>
-                
+
                 {/* Popup form for edit button */}
                 <CandidateFormPopup
                     trigger={popupButtonEdit}
@@ -83,26 +101,54 @@ const VoterView = (props) => {
                     {voters.map((voter) => {
                         if (voter._id === selectedVoter) {
                             return (
-                                <form onSubmit={(e) => {
-                                    handleEdit(e);
-                                    setPopupButtonEdit(false);
-                                }}>
+                                <form
+                                    onSubmit={(e) => {
+                                        handleEdit(e);
+                                        setPopupButtonEdit(false);
+                                    }}
+                                >
                                     <h1>Edit Voter</h1>
                                     <label>First Name:</label>
-                                    <input type="text" name="firstname" placeholder={voter.firstname} onChange={(e) => handleChange(e)}/>
+                                    <input
+                                        type="text"
+                                        name="firstname"
+                                        placeholder={voter.firstname}
+                                        onChange={(e) => handleChange(e)}
+                                        maxLength={20}
+                                        onKeyPress={(event) => {
+                                            if (!/[a-zA-Z]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }}
+                                    />
 
                                     <label>Last Name:</label>
-                                    <input type="text" name="lastname" placeholder={voter.lastname} onChange={(e) => handleChange(e)}/>
+                                    <input
+                                        type="text"
+                                        name="lastname"
+                                        placeholder={voter.lastname}
+                                        onChange={(e) => handleChange(e)}
+                                        maxLength={20}
+                                        onKeyPress={(event) => {
+                                            if (!/[a-zA-Z]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }}
+                                    />
 
                                     <label>Date of Birth:</label>
-                                    <input type="date" name="dob" placeholder={voter.dob} onChange={(e) => handleChange(e)}/>
+                                    <input
+                                        type="date"
+                                        name="dob"
+                                        placeholder={voter.dob}
+                                        onChange={(e) => handleChange(e)}
+                                    />
 
                                     <button type="submit">Submit</button>
                                 </form>
-                            )
-                        }    
+                            );
+                        }
                     })}
-                    
                 </CandidateFormPopup>
 
                 <table className="table">
