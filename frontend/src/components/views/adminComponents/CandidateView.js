@@ -38,6 +38,12 @@ const CandidateView = (props) => {
                             name="name"
                             required
                             onChange={(e) => handleChange(e)}
+                            maxLength={20}
+                            onKeyPress={(event) => {
+                                if (!/[a-zA-Z]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
                         />
                         <button type="submit">Submit</button>
                     </form>

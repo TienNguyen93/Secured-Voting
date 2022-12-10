@@ -30,7 +30,6 @@ const App = () => {
 
     const isVoted = () => {
         setVote(true);
-        console.log(vote);
     }
 
     return (
