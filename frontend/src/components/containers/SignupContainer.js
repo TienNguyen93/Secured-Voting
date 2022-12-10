@@ -32,7 +32,7 @@ const SignupContainer = () => {
         if (registerVoter.password !== registerVoter.confirmPassword) {
             alert("Passwords do not match.");
         } else {
-            voters.map(voter => {
+            voters.forEach(voter => {
                 // if ssn match, retrieve voter's ID
                 //TODO: check if other information is correct
                 if (Number(registerVoter.ssn) === voter.ssn) {

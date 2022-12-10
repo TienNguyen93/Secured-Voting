@@ -30,7 +30,7 @@ const VoterContainer = () => {
                 newVoter.dob.substring(0, 4);
         }
 
-        voters.map((voter) => {
+        voters.forEach((voter) => {
             if (voter._id === selectedVoter) {
                 let first_name =
                     newVoter.firstname !== undefined

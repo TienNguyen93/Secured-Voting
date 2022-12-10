@@ -16,7 +16,7 @@ const PieChartContainer = () => {
         ["Candidate", "Votes"],
     ];
     
-    candidates.map((candidate) => {
+    candidates.forEach((candidate) => {
         data.push([candidate.name, candidate.voteCount]);
     })
 
