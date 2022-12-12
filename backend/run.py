@@ -162,52 +162,6 @@ def register(id):
     
 # ------------------ END OF VOTER METHODS ----------------- #
 
-
-# ------------------ ADDRESS CRUD METHODS ----------------- #
-
-# create address
-@app.route('/address', methods=['POST'])
-def create_address():
-    new_address = request.get_json()
-
-    """
-    check if there exists an address inside the database
-    if yes -> add that address into the neighbor set
-    else -> return
-    """
-    address = Address(**new_address)
-    insert_result = collection.insert_one(address.to_json())
-    created_address = collection.find_one(
-        {"_id": insert_result.inserted_id}
-    )
-    return created_address
-
-
-# get single address
-@app.route("/address/<id>", methods=["GET"])
-def get_address(id):
-    address = collection.find_one_or_404({"_id": id})
-    return Address(**address).to_json()
-
-
-# get all addresses
-@app.route('/address', methods=['GET'])
-def get_addresses():
-    addresses = collection.find(limit=100)
-    return [Address(**address).to_json() for address in addresses]
-
-
-# delete address
-@app.route("/address/<id>", methods=["DELETE"])
-def delete_address(id):
-    deleted_address = collection.find_one_and_delete({"_id": id})
-    if deleted_address:
-        return Address(**deleted_address).to_json()
-    else:
-        flask.abort(404, "Address not found")
-# ------------------ END OF ADDRESS CRUD METHODS ----------------- #
-
-
 # Blockchain
 blockchain = -1
 # Admin's public key
@@ -403,6 +357,7 @@ def update_voting():
 def clear_the_blockchain():
     global blockchain
     blockchain.clear_the_chain() 
+    requests.get("http://127.0.0.1:5000/resolve")
     response = {'message': 'Successfully reset the blockchain'}
     return jsonify(response), 200
 
