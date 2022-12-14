@@ -2,6 +2,7 @@ import React from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import "./SigninView.css"
 
 const SigninView = (props) => {
     const { handler } = props;
@@ -70,49 +71,55 @@ const SigninView = (props) => {
     };
 
     return (
-        <div className="login-wrapper">
-            <h1>Login</h1>
-            <form className="login-form" onSubmit={onSubmitForm}>
-                <div className="input-container">
-                    <input
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                        required="required"
-                    />
-                </div>
-                <div className="input-container">
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                        required="required"
-                    />
-                </div>
-                <div className="button-container">
-                    <button type="submit" onClick={onSubmitForm}>
-                        Login
-                    </button>
-                </div>
-            </form>
+        <div>
+            <h1 style={{textAlign: 'center', marginTop: '3rem', marginBottom: '2rem'}}>
+                Welcome to Secured Voting!
+            </h1>
+            <div className="login-wrapper">
+                <h1>Login</h1>
+                <form className="login-form" onSubmit={onSubmitForm}>
+                    <div className="input-container">
+                        <input
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email"
+                            required="required"
+                        />
+                    </div>
+                    <div className="input-container">
+                        <input
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                            required="required"
+                        />
+                    </div>
+                    <div className="button-container">
+                        <button type="submit" onClick={onSubmitForm}>
+                            Login
+                        </button>
+                    </div>
+                </form>
 
-            <Redirect res={response} />
+                <Redirect res={response} />
 
-            <div className="parent">
-                <div className="child-one">
-                    <p>New to Secured Voting?</p>
-                </div>
-                <div className="child-two">
-                    <Link className="link" to={"/signup"}>
-                        Sign up
-                    </Link>
+                <div className="parent">
+                    <div className="child-one">
+                        <p>New to Secured Voting?</p>
+                    </div>
+                    <div className="child-two">
+                        <Link className="link" to={"/signup"}>
+                            Sign up
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
+
     );
 };
 
