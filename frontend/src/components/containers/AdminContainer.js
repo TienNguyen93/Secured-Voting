@@ -5,6 +5,7 @@ import Navbar from "../views/navbar/Navbar";
 import "../views/adminComponents/Admin.css"
 
 import PieChart from "../containers/PieChartContainer";
+import BarChart from "./BarChart";
 
 const AdminContainer = () => {
     const [isStarted, setIsStarted] = useState(false);
@@ -35,8 +36,6 @@ const AdminContainer = () => {
                 setChain(res.data.chain)
             })
     }
-
-    console.log('chain?', chain)
 
     // const handleStart = () => {
     //     const configuration = {
@@ -99,9 +98,18 @@ const AdminContainer = () => {
                     </div>
                 </div>
 
-                <div className="pie-container">
-                    <PieChart />
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+                    <div className="pie-container">
+                        <PieChart />
+                    </div>
+                    <div className="pie-container-sec">
+                        <BarChart />
+                    </div>
                 </div>
+
+                {/* <div className="pie-container">
+                    <PieChart />
+                </div> */}
 
                 <div className="block-wrap-isStarted">
                     <h1>Blockchain</h1>

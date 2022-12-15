@@ -35,7 +35,7 @@ button {
 }
 
 .candidate-body {
-    background-color: antiquewhite;
+    background-color: #e8f4f8;
     flex-basis: 100%;
     display: flex;
     transition: margin-left .5s ease;

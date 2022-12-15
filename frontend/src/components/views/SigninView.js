@@ -10,6 +10,7 @@ const SigninView = (props) => {
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState("");
     const [user, setUser] = useState();
+    const [error, setError] = useState("")
 
     const onSubmitForm = (event) => {
         event.preventDefault();
@@ -41,10 +42,11 @@ const SigninView = (props) => {
             })
             .catch((error) => {
                 console.log(error);
+                setError(error.code)
             });
     };
 
-    const Redirect = ({ res }) => {
+    const Redirect = ({ res, error }) => {
         if (res === "Voter" || res === "Admin") {
             window.localStorage.setItem("isLoggedIn", "true");
         }
@@ -58,7 +60,7 @@ const SigninView = (props) => {
         if (res === "Admin") {
             return <Navigate to="/admin" />;
         }
-        if (res === "None") {
+        if (res === "None" || error === "ERR_BAD_RESPONSE") {
             return (
                 <div className="error">
                     <div className="error-title">Wrong credentials</div>
@@ -105,7 +107,7 @@ const SigninView = (props) => {
                     </div>
                 </form>
 
-                <Redirect res={response} />
+                <Redirect res={response} error={error}/>
 
                 <div className="parent">
                     <div className="child-one">

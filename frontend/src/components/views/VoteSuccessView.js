@@ -26,13 +26,19 @@ const VoteSuccessView = (props) => {
     const voter = JSON.parse(retrieved)
     const voterInfo = infos.filter(info => info.voter === voter._id)
 
-    console.log('info', voterInfo)
-
     const Receipt = ({ voterInfo }) => {
         return (
             <div style={{ textAlign: 'center' }}>
                 {voterInfo.map(info => (
                     <div key={info.index}>
+                        <div className='info'>
+                            <h3>First Name: </h3>
+                            <p>{voter.firstname}</p>
+                        </div>
+                        <div className='info'>
+                            <h3>Last Name: </h3>
+                            <p>{voter.lastname}</p>
+                        </div>
                         <div className='info'>
                             <h3>Your vote ID: </h3>
                             <p>{info.voter}</p>
@@ -117,14 +123,24 @@ const VoteSuccessView = (props) => {
                     </div>
                 </div>
 
-                <div className='receipt'>
-                    <div style={{margin: '1rem 0rem'}}>
-                        <h1 style={{margin: '1rem 0rem'}}>Vote Receipt</h1>
-                        <Receipt voterInfo={voterInfo} />
+                {infos.length === 0
+                    ? <div className='receipt'>
+                        <div style={{textAlign: 'center'}}>
+                            <h3 style={{margin: '1rem'}}>
+                                Thank you for participating in the 2022 Presidential Election!
+                            </h3>
+                            <p style={{margin: '10px 0px'}}>Your vote matters to the future generation.</p>
+                            <p>Keep calm and be anticipated to the upcoming election!</p>
+                            
+                        </div>
                     </div>
-
-                </div>
-
+                    : <div className='receipt'>
+                        <div style={{ margin: '1rem 0rem' }}>
+                            <h1 style={{ margin: '1rem 0rem' }}>Vote Receipt</h1>
+                            <Receipt voterInfo={voterInfo} />
+                        </div>
+                    </div>
+                }
             </div>
 
         </div>
