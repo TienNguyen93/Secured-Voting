@@ -21,7 +21,7 @@ const SignupView = (props) => {
                                 onChange={(e) => handleChange(e)}
                                 maxLength={20}
                                 onKeyPress={(event) => {
-                                    if (!/[a-zA-Z]/.test(event.key)) {
+                                    if (!/[a-zA-Z\s]/.test(event.key)) {
                                         event.preventDefault()
                                     }
                                 }}
@@ -36,7 +36,7 @@ const SignupView = (props) => {
                                 onChange={(e) => handleChange(e)}
                                 maxLength={20}
                                 onKeyPress={(event) => {
-                                    if (!/[a-zA-Z]/.test(event.key)) {
+                                    if (!/[a-zA-Z\s]/.test(event.key)) {
                                         event.preventDefault()
                                     }
                                 }}
