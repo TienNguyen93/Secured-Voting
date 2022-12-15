@@ -6,8 +6,14 @@ const VoterContainer = () => {
     const [newVoter, setNewVoter] = useState([]);
     const [selectedVoter, setSelectedVoter] = useState({});
 
+    const [isClicked, setIsClicked] = useState(null)
+
     const reload = () => {
         window.location.reload();
+    }
+
+    const childToParent = (data) => {
+        setIsClicked(data)
     }
 
     useEffect(() => {
@@ -122,6 +128,8 @@ const VoterContainer = () => {
             handleEdit={handleEdit}
             selectedVoter={selectedVoter}
             voters={voters}
+            childToParent={childToParent}
+            isClicked={isClicked}
         />
     );
 };

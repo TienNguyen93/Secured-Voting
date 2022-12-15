@@ -1,15 +1,16 @@
 import React from 'react'
-import "./CandidateFormPopup.css"
+// import "./CandidateFormPopup.css"
+import "./Candidate.css";
 
 const CandidateFormPopup = (props) => {
-  return (props.trigger) ? (
+  return (
     <div className="popup">
-        <div className="popup-inside">
-            <button className="close-button" onClick={() => props.setTrigger(false)}>Close</button>
-            {props.children}
-        </div>
+      <button className="close-button" onClick={() => props.setTrigger(false)}>X</button>
+      <div className='pu-content-container'>
+        {props.children}
+      </div>
     </div>
-  ) : "";
+  )
 }
 
 export default CandidateFormPopup

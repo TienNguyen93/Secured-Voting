@@ -1,52 +1,55 @@
 import React, { useState } from "react";
-import * as FIcons from "react-icons/fa";
+import * as FAcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
+import * as MdIcons from "react-icons/md"
+import { RiGovernmentFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { NavbarData } from "./NavbarData";
 import "./Navbar.css";
-import { IconContext } from "react-icons";
+import { useNavigate } from "react-router-dom";
 
-function Navbar() {
-    const [navbar, setNavbar] = useState(false);
+const Navbar = ({childToParent}) => {
+    const [active, setActive] = useState(false);
 
     const handleSignOut = () => {
         localStorage.clear();
         window.location.reload();
     };
 
-    const showNavbar = () => setNavbar(!navbar);
+    const showNavbar = () => {
+        setActive(!active)
+        childToParent(!active)
+    };
+
+    const navigate = useNavigate()
+
     return (
-        <div>
-            <IconContext.Provider value={{ color: "black" }}>
-                <div className="navbar">
-                    <Link to="#" className="menu-bars">
-                        <FIcons.FaBars onClick={showNavbar} />
-                    </Link>
-                </div>
-                <nav className={navbar ? "nav-menu active" : "nav-menu"}>
-                    <ul className="nav-menu-items" onClick={showNavbar}>
-                        <li className="navbar-toggle">
-                            <Link to="#" className="menu-bars">
-                                <AiIcons.AiOutlineClose />
-                            </Link>
-                        </li>
-                        {NavbarData.map((tab, index) => {
-                            return (
-                                <li key={index} className={tab.cName}>
-                                    <Link to={tab.path}>
-                                        <span>{tab.title}</span>
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                        <li className="sign-out">
-                            <Link to="/">
-                                <span onClick={() => handleSignOut()}>Sign Out</span>
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
-            </IconContext.Provider>
+        <div className={active ? "header" : "header-mobile"}>
+            <div className="menu-icon" onClick={showNavbar}>
+                {!active ? <FAcons.FaBars className="menu" /> : <AiIcons.AiOutlineClose className="menu" />}
+            </div>
+            <nav>
+                <ul className={active ? 'ul-item' : 'ul-item oicon'}>
+                    <li>
+                        <MdIcons.MdDashboard className="icon" onClick={() => navigate('/admin')}/>
+                        <Link to="/admin">Dashboard</Link>
+                    </li>
+                    <li>
+                        <RiGovernmentFill className="icon" onClick={() => navigate('/admin/candidates')}/>
+                        <Link to="/admin/candidates">Candidates</Link>
+                    </li>
+                    <li>
+                        <MdIcons.MdPeople className="icon" onClick={() => navigate('/admin/voters')}/>
+                        <Link to="/admin/voters">Voters</Link>
+                    </li>
+                    <li>
+                        <FAcons.FaSignOutAlt className="icon" onClick={() => handleSignOut()}/>
+                        <Link to="/">
+                            <span onClick={() => handleSignOut()}>Sign Out</span>
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
         </div>
     );
 }

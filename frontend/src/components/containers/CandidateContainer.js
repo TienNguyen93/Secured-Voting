@@ -6,6 +6,12 @@ const CandidateContainer = () => {
     const [newCandidate, setNewCandidate] = useState("");
     const [selectedCandidate, setSelectedCandidate] = useState("");
 
+    const [isClicked, setIsClicked] = useState(null)
+
+    const childToParent = (data) => {
+        setIsClicked(data)
+    }
+
     const reload = () => {
         window.location.reload();
     }
@@ -42,7 +48,7 @@ const CandidateContainer = () => {
 
         const request = {
             method: "POST",
-            headers: { "content-Type": "application/json" },
+            headers: { "content-Type": "application/json" },    
             body: JSON.stringify({ name: newCandidate }),
         };
         fetch(`http://localhost:5000/candidates`, request)
@@ -60,6 +66,8 @@ const CandidateContainer = () => {
             handleSelect={handleSelect}
             handleDelete={handleDelete}
             candidates={candidates}
+            childToParent={childToParent}
+            isClicked={isClicked}
         />
     );
 };

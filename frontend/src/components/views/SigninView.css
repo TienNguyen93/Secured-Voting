@@ -1,0 +1,87 @@
+.error {
+  margin: 10px 0px;
+  background-color: #Ffeded;
+  width: 20rem;
+  border: 1.5px solid red;
+  padding: 5px;
+  text-align: center;
+}
+
+.error-title {
+  color: black;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.error-content {
+  color: black;
+  font-size: 15px;
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: ghostwhite;
+  padding: 2rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 25px 30%;
+  border-radius: 15px;
+  color: mediumblue;
+  min-width: 300px;
+  max-height: 700px;
+  height: 60%;
+}
+
+.login-form {
+  /* margin-top: -25px; */
+  width: 60%;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  /* gap: 8px;
+  margin: 20px 10px;
+  width: 20rem; */
+}
+
+.input-container input {
+  width: 95%;
+  margin: 1rem auto;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.child-one {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.child-two {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.child-two:hover {
+  opacity: 0.5;
+}
+
+.link {
+  text-decoration: none;
+  color: mediumblue;
+}
+
+
+@media only screen and (min-width: 375px) and (max-width: 768px) {
+  .input-container input {
+    width: 100%;
+  }
+}

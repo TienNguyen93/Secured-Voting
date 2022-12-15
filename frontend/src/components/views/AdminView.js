@@ -2,32 +2,31 @@ import React from "react";
 import "./adminComponents/Admin.css";
 import { useEffect, useState } from "react";
 
-const AdminView = () => {
-    const [chain, setChain] = useState([]);
+const AdminView = ({chain}) => {
+    // ORIGINAL FUNCTION
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const data = await (
+    //             await fetch(
+    //                 `http://localhost:5000/chain`
+    //             )
+    //         ).json()
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await (
-                await fetch(
-                    `http://localhost:5000/chain`
-                )
-            ).json()
+    //         setChain(data.chain)
+    //     }
 
-            setChain(data.chain)
-        }
+    //     const timer = setTimeout(() => {
+    //         fetchData()
+    //     }, 3000)
 
-        const timer = setTimeout(() => {
-            fetchData()
-        }, 3000)
-
-        return () => clearTimeout(timer)
-    }, [chain])
+    //     return () => clearTimeout(timer)
+    // }, [chain])
 
     return (
         <div>
             <div>
                 <div>
-                    <table className="table">
+                    <table className="chain-table">
                         <thead>
                             <tr>
                                 <th>Block</th>
