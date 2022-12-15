@@ -26,6 +26,10 @@ In order to run this project in a single computer and simulate the real blockcha
 - python3 run.py --port 5002 (another voter's terminal)
 - etc.
 
+## How to run the frontend application
+
+- Type 'cd frontend' then '$env:PORT=3005; npm start'
+
 ## Wireframes
 
 - Wireframes for Admin Dashboard and Voter UI:
