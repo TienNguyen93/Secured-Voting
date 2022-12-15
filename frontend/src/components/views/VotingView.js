@@ -5,7 +5,12 @@ const VotingView = (props) => {
     const { handleSubmit, handleChange, handleSignOut, candidates } = props;
 
     return (
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div id="signOut">
+                <Link to="/">
+                    <button onClick={() => handleSignOut()}>Sign Out</button>
+                </Link>
+            </div>
             <div className="voting-page">
                 <h1>Vote</h1>
                 <div>
@@ -30,11 +35,6 @@ const VotingView = (props) => {
                         </div>
                     </form>
                 </div>
-            </div>
-            <div id="signOut">
-                <Link to="/">
-                    <button onClick={() => handleSignOut()}>Sign Out</button>
-                </Link>
             </div>
         </div>
     );

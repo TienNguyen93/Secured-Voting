@@ -11,31 +11,77 @@ const VoterView = (props) => {
         handleSelect,
         selectedVoter,
         voters,
+        childToParent,
+        isClicked
     } = props;
     const [popupButton, setPopupButton] = useState(false);
     const [popupButtonEdit, setPopupButtonEdit] = useState(false);
 
-    return (
-        <div>
-            <Navbar />
-            <div className="VoterFormContainer">
-                <h1>Voters</h1>
-                <button onClick={() => setPopupButton(true)}>New</button>
-                <button onClick={() => setPopupButtonEdit(true)}>Edit</button>
+    const duringPopup = popupButton || popupButtonEdit ? " during-popup" : ""
 
-                {/* Popup form for new button */}
-                <CandidateFormPopup
-                    trigger={popupButton}
-                    setTrigger={setPopupButton}
-                >
+    return (
+        <div className="VoterFormContainer">
+            <Navbar childToParent={childToParent} />
+            <div className={isClicked ? "voter-body-navbar" : "voter-body" + duringPopup}>
+                <div className="voter-body-wrap">
+                    <div className="voter-header">
+                        <h1 style={{ margin: "10px 0px" }}>Voters</h1>
+                        <div className="button-wrap">
+                            <button onClick={() => setPopupButton(true)}>New</button>
+                            <button style={{width: '11em'}} onClick={() => setPopupButtonEdit(true)}>
+                                Select a voter to edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Date of Birth</th>
+                                <th>Account Registered</th>
+                                <th>Voted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {voters.map((voter) => {
+                                return (
+                                    <tr key={voter._id}>
+                                        <td>
+                                            <input
+                                                type="radio"
+                                                name="id"
+                                                value={voter._id}
+                                                onClick={(e) => handleSelect(e)}
+                                            />
+                                        </td>
+                                        <td>{voter._id}</td>
+                                        <td>{voter.firstname}</td>
+                                        <td>{voter.lastname}</td>
+                                        <td>{voter.dob}</td>
+                                        <td>{voter.registered ? "Yes" : "No"}</td>
+                                        <td>{voter.voted ? "Yes" : "No"}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {/* Popup form for new button */}
+            {popupButton &&
+                <CandidateFormPopup setTrigger={setPopupButton}>
                     <form
+                        style={{ display: 'flex', flexDirection: 'column' }}
                         onSubmit={(e) => {
-                            handleSubmit(e);
-                            setPopupButton(false);
-                        }}
-                    >
-                        <h1>Add Voter</h1>
-                        <label>First Name:</label>
+                            handleSubmit(e)
+                            setPopupButton(false)
+                        }}>
+                        <h1 style={{ marginBottom: '0.5rem' }}>Add Voter</h1>
+                        <label>First Name: </label>
                         <input
                             type="text"
                             name="firstname"
@@ -89,26 +135,28 @@ const VoterView = (props) => {
                         />
                         <br />
 
-                        <button type="submit">Submit</button>
+                        <div style={{ marginTop: '1.5rem', display: 'flex', alignSelf: 'center' }}>
+                            <button type="submit">Submit</button>
+                        </div>
                     </form>
                 </CandidateFormPopup>
+            }
 
-                {/* Popup form for edit button */}
-                <CandidateFormPopup
-                    trigger={popupButtonEdit}
-                    setTrigger={setPopupButtonEdit}
-                >
+            {/* Popup form for edit button */}
+            {popupButtonEdit &&
+                <CandidateFormPopup setTrigger={setPopupButtonEdit}>
                     {voters.map((voter) => {
                         if (voter._id === selectedVoter) {
                             return (
                                 <form
+                                    key={voter._id}
+                                    style={{ display: 'flex', flexDirection: 'column' }}
                                     onSubmit={(e) => {
-                                        handleEdit(e);
-                                        setPopupButtonEdit(false);
-                                    }}
-                                >
-                                    <h1>Edit Voter</h1>
-                                    <label>First Name:</label>
+                                        handleEdit(e)
+                                        setPopupButtonEdit(false)
+                                    }}>
+                                    <h1 style={{ marginBottom: '0.5rem' }}>Edit Voter</h1>
+                                    <label>First Name: </label>
                                     <input
                                         type="text"
                                         name="firstname"
@@ -121,6 +169,7 @@ const VoterView = (props) => {
                                             }
                                         }}
                                     />
+                                    <br />
 
                                     <label>Last Name:</label>
                                     <input
@@ -135,6 +184,7 @@ const VoterView = (props) => {
                                             }
                                         }}
                                     />
+                                    <br />
 
                                     <label>Date of Birth:</label>
                                     <input
@@ -144,49 +194,15 @@ const VoterView = (props) => {
                                         onChange={(e) => handleChange(e)}
                                     />
 
-                                    <button type="submit">Submit</button>
+                                    <div style={{ marginTop: '1.5rem', display: 'flex', alignSelf: 'center' }}>
+                                        <button type="submit">Submit</button>
+                                    </div>
                                 </form>
-                            );
-                        }
+                            )
+                        } 
                     })}
                 </CandidateFormPopup>
-
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Date of Birth</th>
-                            <th>Account Registered</th>
-                            <th>Voted</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {voters.map((voter) => {
-                            return (
-                                <tr>
-                                    <td>
-                                        <input
-                                            type="radio"
-                                            name="id"
-                                            value={voter._id}
-                                            onClick={(e) => handleSelect(e)}
-                                        />
-                                    </td>
-                                    <td>{voter._id}</td>
-                                    <td>{voter.firstname}</td>
-                                    <td>{voter.lastname}</td>
-                                    <td>{voter.dob}</td>
-                                    <td>{voter.registered ? "Yes" : "No"}</td>
-                                    <td>{voter.voted ? "Yes" : "No"}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
+            }
         </div>
     );
 };

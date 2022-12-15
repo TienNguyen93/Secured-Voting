@@ -21,11 +21,13 @@ const PieChartContainer = () => {
     })
 
     const options = {
-        title: "Voting Results",
+        title: "Current 2022 Presidential Voting Results",
         is3D: true,
         backgroundColor: "transparent",
-        titleTextStyle: { fontSize: 20 },
-        legend: { textStyle: { fontSize: 16 } },
+        titleTextStyle: { fontSize: 20, position: 'top'},
+        legend: {position: 'labeled', textStyle: {bold: true, fontSize: 14}},
+        pieSliceText: 'none',
+        chartArea: {top: 55, height: '65%'},
     };
 
     return (
