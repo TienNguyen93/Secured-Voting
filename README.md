@@ -53,6 +53,8 @@ In order to run this project in a single computer and simulate the real blockcha
 - Open several terminals (one for admin and several other for voters)
 - Admin runs on port 5000 and each new voter should run on a unique port starting from 5001, 5002, 5003 and so on
 - Change the directory to backend with `cd backend`
+- Create and activate virtual environment accordingly to your operating system
+- Run `pip install -r requirements.txt` or `pip3 install -r requirements.txt` to install the required packages
 - Run the following commands in each separate terminal with corresponding ports:
   - `python3 run.py --port 5000` (admin's terminal)
   - `python3 run.py --port 5001` (voter's terminal)
