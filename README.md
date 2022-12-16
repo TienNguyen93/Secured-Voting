@@ -23,20 +23,27 @@ The frontend contains two sets of components, one for Administrator and one for 
     - a table that simulates the blockchain including the following fields:
       | Block      | Voter ID | Voted Candidate | Timestamp | Previous Hash | Hash |
       | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+      
   <img src="/assets/admin-dash.png" width=80% height=80%>
+  
   - A Candidates tab that displays a list of candidates and their current votes
     - `New` and `Delete` buttons to add and delete the candidate 
+    
   <img src="/assets/admin-cand.png" width=80% height=80%>
+  
   - A Voters tab that displays a list of voters along with their personal information
     - `New` and `Select a voter to edit` buttons to add and edit voters' information
   <img src="/assets/admin-voter.png" width=80% height=80%>
+  
   - A Signout tab for the Admin to signout
   
 - The Voter's components include: 
   - A Voting page that allows voters to select a candidate and cast their vote
   <img src="/assets/voter-voting.png" width=80% height=80%>
+  
   - A Voting Success page that displays the successfully casted vote and a receipt of their vote
-  <img src="/assets/voter-voting.png" width=80% height=80%>
+  <img src="/assets/voter-success.png" width=80% height=80%>
+  
   - A Signout button for the voters to signout
 
 ## How to run Blockchain (backend)
