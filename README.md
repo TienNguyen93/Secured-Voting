@@ -6,7 +6,7 @@ Secured Voting is a web-based software that aims at providing a secured platform
 
 ## Technologies
 
-- Frontend: React, JavaScript, HTML/CSS
+- Frontend: React, JavaScript, HTML/CSS, React-google-charts
 - Backend: Python, Flask, MongoDB
 
 ## Backend
@@ -19,16 +19,24 @@ In order to run this project in a single computer and simulate the real blockcha
 
 - Open several terminals (one for admin and several other for voters)
 - Admin runs on port 5000 and each new voter should run on a unique port starting from 5001, 5002, 5003 and so on
-- Change the directory to "backend" directory
-- Run the following commands in each separate terminal with corresponding ports
-- python3 run.py --port 5000 (admin's terminal)
-- python3 run.py --port 5001 (voter's terminal)
-- python3 run.py --port 5002 (another voter's terminal)
-- etc.
+- Change the directory to backend with `cd backend`
+- Run the following commands in each separate terminal with corresponding ports:
+  - `python3 run.py --port 5000` (admin's terminal)
+  - `python3 run.py --port 5001` (voter's terminal)
+  - `python3 run.py --port 5002` (another voter's terminal)
+  - etc.
 
 ## How to run the frontend application
 
-- Type 'cd frontend' then '$env:PORT=3005; npm start'
+- Change the directory to frontend with `cd frontend`
+- Run the following commands to initialize different React application:
+  - `$env:PORT=3000; npm start` (admin's corresponding frontend)
+  - `$env:PORT=3001; npm start` (voter's corresponding frontend)
+  - `$env:PORT=3002; npm start` (another voter's corresponding frontend)
+  - etc
+- Login to Admin page on `port 3000` and click `Start election` button to initialize the blockchain system
+- Login to Voter page on `port 300x`, pick a candidate, then submit the vote
+- Vote will go through the system and be displayed on the Admin dashboard
 
 ## Wireframes
 
