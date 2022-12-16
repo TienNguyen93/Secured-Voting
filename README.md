@@ -13,6 +13,26 @@ Secured Voting is a web-based software that aims at providing a secured platform
 
 The very essence of the blockchain is to create a network of independent computers where each computer or node stores the exact copy of blockchain. By having multiple copies (in multiple independent nodes), the data in the blockchain is secure from being changed because each node checks on each other via certain agreed upon consensus algorithm and any tampering can be easily detected. The blockchain of our project uses the Proof of Authority Consensus meaning that only the authority/admin node has ability to add voter's vote to the blockchain only after verifying it and checking if the blockchain is valid. Each voter represents a node and after successfully casting his vote, he enters the network and stores the copy of the blockchain. Also, our blockchain is private meaning that only registered voters can enter the network.
 
+## Frontend
+
+The frontend contains two sets of components, one for Administrator and one for Voter. 
+- The Administrator's components include:
+  - A Dashboard tab that display the result of:
+    - the vote difference between the candidates in current election through a pie chart 
+    - the number of eligible voters who have voted and who have not voted through a bar chart
+    - a table that simulates the blockchain including the following fields:
+      | Block      | Voter ID | Voted Candidate | Timestamp | Previous Hash | Hash |
+      | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+  - A Candidates tab that displays a list of candidates and their current votes
+    - `New` and `Delete` buttons to add and delete the candidate 
+  - A Voters tab that displays a list of voters along with their personal information
+    - `New` and `Select a voter to edit` buttons to add and edit voters' information
+  - A Signout tab for the Admin to signout
+- The Voter's components include: 
+  - A Voting page that allows voters to select a candidate and cast their vote
+  - A Voting Success page that displays the successfully casted vote and a receipt of their vote
+  - A Signout button for the voters to signout
+
 ## How to run Blockchain (backend)
 
 In order to run this project in a single computer and simulate the real blockchain, please follow these instructions:
